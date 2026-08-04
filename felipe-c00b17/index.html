@@ -1,0 +1,1718 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Métricas de conteúdo · @felipevenancio.ia</title>
+<style>
+  :root {
+    --ground: #FDFCFA;
+    --card: #FFFFFF;
+    --ink: #17211B;
+    --ink-2: #5B6660;
+    --hairline: #E7E5DF;
+    --accent: #157A46;
+    --accent-soft: #EAF4EE;
+    --up: #157A46;
+    --down: #C2503F;
+    --serif: "Iowan Old Style", "Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    --sans: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, "Segoe UI", system-ui, sans-serif;
+  }
+  html { background: var(--ground); }
+  body { font-family: var(--sans); color: var(--ink); line-height: 1.55; margin: 0; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 40px 24px 80px; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 10px; }
+  .perfil { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; }
+  .perfil-foto {
+    width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--accent); padding: 2px; background: var(--card);
+  }
+  .perfil-nome { font-family: var(--serif); font-weight: 600; font-size: 18px; line-height: 1.25; }
+  .perfil-handle { font-size: 13px; color: var(--ink-2); }
+  .perfil-handle a { color: var(--ink-2); text-decoration: none; font-weight: 500; }
+  .perfil-handle a:hover, .perfil-handle a:focus-visible { color: var(--accent); text-decoration: underline; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(28px, 5vw, 42px); line-height: 1.12; margin: 0 0 8px; text-wrap: balance; }
+  .sub { color: var(--ink-2); font-size: 15px; margin: 0 0 20px; }
+  .verdict { font-family: var(--serif); font-size: clamp(17px, 2.4vw, 21px); line-height: 1.5; max-width: 46em; margin: 0; }
+  .verdict strong { color: var(--accent); font-weight: 600; }
+
+  /* barra de navegação: abas + mês */
+  .viewbar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    padding: 12px 0; margin: 18px 0 6px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    position: sticky; top: 0; background: var(--ground); z-index: 5;
+  }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--hairline); border-radius: 99px;
+    padding: 7px 16px; cursor: pointer;
+  }
+  .tab:hover { border-color: var(--ink-2); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tab[aria-selected="true"] { color: #fff; border-color: transparent; }
+  .mesnav { display: flex; align-items: center; gap: 10px; }
+  .mesnav button {
+    font-size: 16px; line-height: 1; background: var(--card); color: var(--ink);
+    border: 1px solid var(--hairline); border-radius: 8px; width: 34px; height: 34px; cursor: pointer;
+  }
+  .mesnav button:hover:not(:disabled) { border-color: var(--ink-2); }
+  .mesnav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mesnav button:disabled { opacity: 0.3; cursor: default; }
+  .mesnav .mes-label { font-family: var(--serif); font-size: 17px; font-weight: 600; min-width: 130px; text-align: center; }
+  .periodonav { display: none; gap: 6px; flex-wrap: wrap; }
+  .subnav { display: flex; gap: 4px 14px; flex-wrap: wrap; margin-top: 18px; font-size: 12.5px; }
+  .subnav button { background: none; border: 0; padding: 2px 0; cursor: pointer; color: var(--ink-2); font-size: 12.5px; font-weight: 600; border-bottom: 1px solid transparent; }
+  .subnav button:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .subnav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  section { margin-top: 52px; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 24px; margin: 0 0 6px; }
+  .lede { color: var(--ink-2); font-size: 14.5px; margin: 0 0 22px; max-width: 60em; }
+
+  .kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 1px; background: var(--hairline); border: 1px solid var(--hairline);
+    border-radius: 10px; overflow: hidden; margin-top: 28px;
+  }
+  .kpi { background: var(--card); padding: 16px 16px 14px; }
+  .kpi .n { font-size: clamp(20px, 3vw, 28px); font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .kpi .l { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+  .kpi .d { font-size: 11.5px; margin-top: 2px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .kpi .d .up { color: var(--up); }
+  .kpi .d .down { color: var(--down); }
+
+  .insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .insight { background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; padding: 22px 22px 20px; }
+  .insight .num { font-family: var(--serif); font-size: 13px; color: var(--ink-2); margin-bottom: 8px; }
+  .insight h3 { font-family: var(--serif); font-size: 18.5px; font-weight: 600; margin: 0 0 8px; line-height: 1.3; }
+  .insight p { font-size: 14px; color: var(--ink-2); margin: 0; }
+  .insight p strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .insight .card-data { font-size: 10.5px; letter-spacing: 0.02em; color: var(--ink-2); opacity: 0.75; margin-top: 14px; padding-top: 9px; border-top: 1px solid var(--hairline); font-variant-numeric: tabular-nums; }
+
+  .chart-card { background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; padding: 20px 20px 14px; margin-top: 16px; position: relative; }
+  .zoom-btn {
+    position: absolute; top: 10px; right: 10px; width: 30px; height: 30px;
+    font-size: 15px; line-height: 1; color: var(--ink-2); background: var(--card);
+    border: 1px solid var(--hairline); border-radius: 8px; cursor: pointer;
+  }
+  .zoom-btn:hover { color: var(--ink); border-color: var(--ink-2); }
+  .zoom-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #zoom-fundo {
+    position: fixed; inset: 0; background: rgba(23, 33, 27, 0.45); z-index: 50;
+    opacity: 0; pointer-events: none; transition: opacity 0.22s ease;
+  }
+  body.zoom-aberto #zoom-fundo { opacity: 1; pointer-events: auto; }
+  #zoom-caixa {
+    position: fixed; inset: 0; z-index: 51; display: flex; align-items: center; justify-content: center;
+    padding: 3vh 3vw; opacity: 0; transform: scale(0.95); pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  body.zoom-aberto #zoom-caixa { opacity: 1; transform: none; pointer-events: auto; }
+  #zoom-conteudo {
+    background: var(--card); border-radius: 12px; padding: 26px 28px 20px;
+    width: min(1500px, 100%); max-height: 92vh; overflow: auto;
+    box-shadow: 0 24px 70px rgba(23, 33, 27, 0.3);
+  }
+  #zoom-conteudo .zoom-btn { display: none; }
+  .lbl-extra { display: none; } /* rótulos completos: só aparecem no gráfico expandido */
+  #zoom-conteudo .lbl-extra { display: inline; }
+  #zoom-fechar {
+    position: absolute; top: 14px; right: 16px; width: 38px; height: 38px; font-size: 17px;
+    color: #fff; background: rgba(23, 33, 27, 0.6); border: 0; border-radius: 99px; cursor: pointer;
+  }
+  #zoom-fechar:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    #zoom-fundo, #zoom-caixa { transition: none; }
+  }
+  .chart-card h3 { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+  .chart-card .hint { font-size: 12.5px; color: var(--ink-2); margin: 0 0 12px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 14px 0 4px; }
+  .legend span { font-size: 12.5px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: var(--sans); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin-top: 16px; }
+  .grid-2 .chart-card { margin-top: 0; }
+
+  /* tela Hoje */
+  #tela-hoje { display: none; }
+  .modo-hoje #tela-hoje { display: block; }
+  .modo-hoje .mes-view { display: none !important; }
+  /* tela Semana */
+  #tela-semana { display: none; }
+  .modo-semana #tela-semana { display: block; }
+  .modo-semana .mes-view { display: none !important; }
+  .modo-semana #tela-hoje { display: none !important; }
+  .modo-hoje #tela-semana { display: none !important; }
+  .fogo-nota { font-size: 12.5px; color: var(--ink-2); }
+  .vazio { color: var(--ink-2); font-size: 14px; padding: 24px 0; text-align: center; }
+  .prov { display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em; color: #B8860B; background: #FBF3DD; border: 1px solid #EBD9A8; border-radius: 99px; padding: 1px 7px; white-space: nowrap; vertical-align: middle; cursor: help; }
+
+  /* "O que estão comentando" (tela Hoje) */
+  .coment-post { background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; padding: 15px 18px; margin-top: 12px; display: grid; grid-template-columns: 52px 1fr; gap: 14px; }
+  .coment-post .cabeca { font-size: 13px; color: var(--ink-2); margin-bottom: 6px; line-height: 1.4; }
+  .coment-post .cabeca a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  .coment-post .cabeca a:hover, .coment-post .cabeca a:focus-visible { color: var(--accent); text-decoration: underline; }
+  .coment-post .cabeca strong { color: var(--accent); font-variant-numeric: tabular-nums; }
+  .coment-thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; border: 1px solid var(--hairline); }
+  .coment { font-size: 14px; color: var(--ink); padding: 8px 0; border-top: 1px solid var(--hairline); line-height: 1.45; display: flex; gap: 10px; justify-content: space-between; }
+  .coment:first-of-type { border-top: 0; padding-top: 2px; }
+  .coment .lk { color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 500px) { .coment-post { grid-template-columns: 1fr; } .coment-thumb { width: 44px; height: 44px; } }
+
+  .arq-table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); }
+  .arq-table th { text-align: left; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--ink); }
+  .arq-table td { padding: 11px 12px; border-bottom: 1px solid var(--hairline); font-variant-numeric: tabular-nums; }
+  .arq-table td:first-child { font-weight: 600; }
+  .arq-table .dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-right: 8px; }
+  .arq-table .best { background: var(--accent-soft); }
+  .num-col { text-align: right; }
+  .arq-table th.num-col { text-align: right; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 10px; }
+
+  .sort-pills { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 16px; }
+  .sort-pill {
+    font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--hairline); border-radius: 99px;
+    padding: 5px 13px; cursor: pointer;
+  }
+  .sort-pill:hover { border-color: var(--ink-2); }
+  .sort-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .sort-pill[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .thumb-sm { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; vertical-align: middle; margin-right: 8px; flex-shrink: 0; }
+  .thumb-md { width: 76px; height: 76px; border-radius: 10px; object-fit: cover; margin-top: 10px; border: 1px solid var(--hairline); }
+
+  .winners { display: grid; gap: 14px; }
+  .winner { background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; padding: 20px 22px; display: grid; grid-template-columns: 88px 1fr; gap: 18px; }
+  .winner .rank .pct { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1.1; }
+  .winner .rank .rl { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+  .winner blockquote { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; margin: 0 0 10px; color: var(--ink); }
+  .winner .meta { font-size: 12.5px; color: var(--ink-2); margin-bottom: 10px; }
+  .winner .meta b { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .winner .why { font-size: 14px; color: var(--ink-2); margin: 0; }
+  .winner .why strong { color: var(--ink); }
+  .chip { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; color: #fff; margin-bottom: 8px; }
+  .winner a { color: var(--accent); font-size: 12.5px; text-decoration: none; font-weight: 500; }
+  .winner a:hover, .winner a:focus-visible { text-decoration: underline; }
+
+  .avoid { border: 1px solid var(--hairline); border-left: 4px solid #9AA09C; background: var(--card); border-radius: 10px; padding: 20px 22px; }
+  .avoid h3 { font-family: var(--serif); font-size: 18px; margin: 0 0 8px; }
+  .avoid p { font-size: 14.5px; color: var(--ink-2); margin: 0 0 8px; max-width: 62em; }
+  .avoid p:last-child { margin-bottom: 0; }
+  .avoid strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .recs { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+  .rec { background: var(--accent-soft); border-radius: 10px; padding: 20px 22px; }
+  .rec h3 { font-family: var(--serif); font-size: 17.5px; margin: 0 0 8px; color: var(--ink); }
+  .rec p { font-size: 14px; margin: 0; color: var(--ink-2); }
+  .rec p + p { margin-top: 8px; }
+  .rec p strong { color: var(--accent); }
+  @media (max-width: 500px) { .recs { grid-template-columns: 1fr; } }
+
+  details { margin-top: 16px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 14.5px; padding: 14px 18px; background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; list-style-position: inside; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  details[open] summary { border-radius: 10px 10px 0 0; }
+  .full-table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--card); min-width: 920px; }
+  .full-table th { position: sticky; top: 0; background: var(--card); text-align: left; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); padding: 9px 10px; border-bottom: 1px solid var(--ink); white-space: nowrap; }
+  .full-table td { padding: 8px 10px; border-bottom: 1px solid var(--hairline); font-variant-numeric: tabular-nums; vertical-align: top; }
+  .full-table td.cap { max-width: 320px; }
+  .full-table td.cap a { color: var(--ink); text-decoration: none; }
+  .full-table td.cap a:hover, .full-table td.cap a:focus-visible { color: var(--accent); text-decoration: underline; }
+  .full-table .num-col { text-align: right; white-space: nowrap; }
+  .full-table th.num-col { text-align: right; }
+  .details-body { border: 1px solid var(--hairline); border-top: 0; border-radius: 0 0 10px 10px; overflow-x: auto; }
+
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--hairline); font-size: 12.5px; color: var(--ink-2); max-width: 70em; }
+  @media (max-width: 560px) { .winner { grid-template-columns: 1fr; gap: 8px; } .wrap { padding-top: 28px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="perfil">
+      <img class="perfil-foto" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2250%22%20fill%3D%22%23157A46%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2263%22%20font-family%3D%22Georgia%2C%20serif%22%20font-size%3D%2236%22%20fill%3D%22%23FFFFFF%22%20text-anchor%3D%22middle%22%3EFV%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Foto de perfil de @felipevenancio.ia">
+      <div>
+        <div class="perfil-nome">Felipe Venâncio</div>
+        <div class="perfil-handle"><a href="https://www.instagram.com/felipevenancio.ia/" target="_blank" rel="noopener">@felipevenancio.ia</a> · <span id="perfil-seg">Instagram</span></div>
+      </div>
+    </div>
+    <p class="eyebrow">Análise mensal de conteúdo · Instagram</p>
+    <h1 id="h1-label">—</h1>
+    <p class="sub" id="sub-label">—</p>
+
+    <nav class="viewbar" aria-label="Formato e mês">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="mesnav" id="mesnav">
+        <button id="mes-prev" aria-label="Mês anterior">←</button>
+        <span class="mes-label" id="mes-label">—</span>
+        <button id="mes-next" aria-label="Próximo mês">→</button>
+      </div>
+      <div class="periodonav" id="periodonav" role="group" aria-label="Janela do período"></div>
+      <button class="tab" id="btn-exportar" title="Baixa um .md com pautas, leituras e ações — e copia pro clipboard">⬇ Exportar análises</button>
+    </nav>
+
+    <div id="verdict-auto" class="verdict mes-view" style="margin-top:18px"></div>
+    <div id="verdict-curado" class="curated verdict mes-view" style="margin-top:18px">
+      Mês excepcional: engajamento mediano de <strong id="vc-med">10,6%</strong> — quase o dobro do teto da faixa
+      "excelente" do Instagram (6%) — e <strong>9,8 milhões</strong> de alcance. O motor é um só:
+      <strong>a tese "o Brasil não se valoriza" aplicada a um assunto quente</strong>. Quando ela encontra
+      a Copa ou uma notícia, nasce um hit. O único senão está no comparativo: <strong>maio fez quase 3×
+      o alcance de junho</strong> — o teto da conta está acima do que este mês mostrou.
+    </div>
+
+    <div class="kpis mes-view" id="kpis"></div>
+    <nav class="subnav mes-view" id="subnav" aria-label="Ir para a seção"></nav>
+  </header>
+
+  <div id="tela-hoje">
+    <div class="verdict" id="hoje-verdict" style="margin-top:18px"></div>
+    <div class="kpis" id="hoje-kpis"></div>
+    <section>
+      <h2>Leituras do dia</h2>
+      <p class="lede" id="insights-lede">Análise gerada pelo Claude a cada atualização, cruzando os últimos dias com o histórico da conta.</p>
+      <div class="insights" id="hoje-insights"></div>
+      <div class="recs" id="hoje-acoes" style="margin-top:16px"></div>
+    </section>
+    <section>
+      <h2>Últimos 3 dias, post a post</h2>
+      <p class="lede">O que está no ar agora, do maior para o menor alcance. 🔥 = alcance já passou de 2× a mediana do formato — candidato a impulsionar ou replicar. <strong>⏳ provisório</strong> = post de menos de 72h: o alcance ainda está subindo na API, então a <strong>taxa de engajamento está inflada</strong> e vai assentar nos próximos dias (por isso esses posts ficam de fora das medianas). Números da última atualização.</p>
+      <div class="winners" id="hoje-destaque"></div>
+      <div class="table-scroll" style="margin-top:16px" id="hoje-lista"></div>
+    </section>
+    <section id="hoje-comentarios-sec" style="display:none">
+      <h2>O que estão comentando</h2>
+      <p class="lede">A voz do público ao vivo — os comentários mais curtidos nos posts que estão recebendo conversa agora. Puxado a cada atualização.</p>
+      <div id="hoje-comentarios"></div>
+    </section>
+    <section>
+      <h2>Seguidores, dia a dia</h2>
+      <p class="lede">Novos seguidores por dia, na janela que a API entrega (consolidado até ontem — o número de hoje fecha amanhã). Passe o mouse numa barra pra ver o que estava no ar naquele dia.</p>
+      <div class="chart-card"><div id="hoje-chart-seg"></div></div>
+      <div id="hoje-seg-dias" style="margin-top:16px"></div>
+    </section>
+  </div>
+
+  <div id="tela-semana">
+    <div class="verdict" id="semana-verdict" style="margin-top:18px"></div>
+    <div class="kpis" id="semana-kpis"></div>
+    <section>
+      <h2>Seguidores: ganhos × perdidos</h2>
+      <p class="lede">O fluxo real da base, dia a dia — quem entrou (verde, pra cima) e quem saiu (vermelho, pra baixo). Medido direto na Meta; dias marcados com ~ são estimativa (ganhos consolidados − variação líquida). Passe o mouse num dia pra ver o que estava no ar.</p>
+      <div class="chart-card"><div id="semana-seg-chart"></div></div>
+      <div id="semana-perdidos" style="margin-top:16px"></div>
+    </section>
+    <section>
+      <h2>A semana, post a post</h2>
+      <p class="lede">Todos os posts dos últimos 7 dias, do maior para o menor alcance — com a conversão em seguidores de cada um. ⏳ = métricas ainda amadurecendo.</p>
+      <div class="table-scroll" id="semana-posts"></div>
+    </section>
+  </div>
+
+  <section class="curated mes-view">
+    <h2>As três leituras do mês</h2>
+    <p class="lede">Tudo que importa do mês cabe em três frases. O resto da página é a prova. (Curadoria editorial — gerada no fechamento do mês para o formato principal.)</p>
+    <div class="insights">
+      <div class="insight">
+        <div class="num">Leitura 1</div>
+        <h3>Compartilhamento e salvamento separam topo de fundo</h3>
+        <p>O quartil de posts com mais engajamento tem <strong>7,5×</strong> o share rate e <strong>3,2×</strong> o save rate
+        do quartil de baixo (correlação: share r=0,73, save r=0,74, ambos p&lt;0,001). A curtida vem junto; quem decide o jogo é o encaminhar e o guardar.</p>
+      </div>
+      <div class="insight">
+        <div class="num">Leitura 2</div>
+        <h3>Tese Brasil engaja, Copa alcança — o hit é a interseção</h3>
+        <p>Os 19 posts da tese central fazem <strong>15,3%</strong> de engajamento médio. Os 17 de Copa &amp; futebol carregam
+        <strong>metade do alcance do mês</strong> (4,9 mi). Os maiores posts de junho são exatamente os que juntam as duas coisas.</p>
+      </div>
+      <div class="insight">
+        <div class="num">Leitura 3</div>
+        <h3>Repostar hit funciona</h3>
+        <p>A legenda do "vira-lata da seleção" foi publicada <strong>3 vezes</strong> no mês: 1,13 mi, 491 mil e 78 mil de alcance —
+        as três com engajamento acima de 14,7%. Um único conteúdo comprovado rendeu <strong>1,7 mi</strong> de alcance somado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mes-view" id="sec-leituras-periodo" style="display:none">
+    <h2 id="leituras-periodo-h2">Leituras do período</h2>
+    <p class="lede" id="leituras-periodo-lede"></p>
+    <div class="insights" id="leituras-periodo-cards"></div>
+  </section>
+
+  <section class="mes-view" id="sec-pautas" style="display:none">
+    <h2>O que produzir agora</h2>
+    <p class="lede" id="pautas-lede">Pautas prontas — geradas do cruzamento entre o que está performando, o que o público pede nos comentários e as fórmulas de capa que funcionam. Renovadas todo dia, na primeira rodada do atualizar.</p>
+    <div class="recs" id="pautas-cards"></div>
+  </section>
+
+  <section class="mes-view" id="sec-top5">
+    <h2 id="winners-titulo">Top 5 do mês</h2>
+    <p class="lede" id="winners-lede">Os cinco maiores engajamentos do mês no formato selecionado.</p>
+    <div class="sort-pills" id="ordem-pills" role="group" aria-label="Ordenar o top 5 por"></div>
+    <div class="winners" id="winners"></div>
+  </section>
+
+  <div id="sec-graficos">
+  <section class="mes-view" id="sec-graficos-mes">
+    <h2>O mês por dentro</h2>
+    <p class="lede">Ritmo e padrões só do mês em exibição, no formato selecionado. Buckets com poucos posts: leia como direção, não como lei. O compilado de todos os meses fica na posição "todo o período" e na Visão global.</p>
+    <div class="chart-card">
+      <h3>Quais dias de publicação renderam mais</h3>
+      <p class="hint">Cada barra é o alcance ACUMULADO até hoje dos posts publicados naquele dia — um viral infla o dia em que nasceu (não é "o alcance da conta no dia"). Passe o mouse pra ver o que saiu em cada dia.</p>
+      <div id="mes-diario"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Semanas do mês</h3>
+      <p class="hint">As semanas (segunda a domingo) que tocam o mês; o rótulo é a segunda-feira que abre a semana. Barras = posts na semana · linha = engajamento mediano.</p>
+      <div id="mes-semanal"></div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>Dia da semana</h3>
+        <p class="hint">Engajamento mediano por dia de publicação — só os posts do mês.</p>
+        <div id="mes-dia"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Faixa de horário</h3>
+        <p class="hint">Engajamento mediano por faixa de horário — só os posts do mês.</p>
+        <div id="mes-hora"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mes-view" id="sec-graficos-periodo">
+    <h2>O período em perspectiva</h2>
+    <p class="lede" id="semestre-lede">O compilado mês a mês do formato selecionado. Na Visão global, as pílulas no topo filtram a janela: últimos 3 meses, 6 meses, 1 ano ou tudo.</p>
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>Mês a mês — volume × engajamento</h3>
+        <p class="hint">Barras = posts publicados · linha = engajamento mediano do mês.</p>
+        <div id="comp-mensal"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Mês a mês — alcance total</h3>
+        <p class="hint">Alcance somado de todos os posts do formato no mês.</p>
+        <div id="comp-alcance"></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Semana a semana</h3>
+      <p class="hint">Cada barra é uma semana (segunda a domingo); o rótulo embaixo é a segunda-feira que abre a semana. Com a janela em "tudo", mostra as semanas do ano corrente (o histórico longo fica no gráfico mês a mês); nas janelas de 3/6/12 meses, as semanas da janela. Barras = posts na semana · linha = engajamento mediano. Passe o mouse pra ver a semana exata, com o ano.</p>
+      <div id="comp-semanal"></div>
+    </div>
+    <div class="chart-card" id="card-arq-mes" style="display:none">
+      <h3>Arquétipos, mês a mês</h3>
+      <p class="hint">Composição da produção por arquétipo (volume de posts, empilhado). Passe o mouse num segmento pra ver a mediana de engajamento do arquétipo naquele mês — é aqui que se enxerga fórmula saturando ou decolando.</p>
+      <div id="comp-arq"></div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>Dia da semana</h3>
+        <p class="hint">Engajamento mediano por dia de publicação (período selecionado, formato selecionado).</p>
+        <div id="comp-dia"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Faixa de horário</h3>
+        <p class="hint">Engajamento mediano por faixa de horário de publicação (período selecionado, formato selecionado).</p>
+        <div id="comp-hora"></div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <section class="mes-view">
+    <h2 id="ranking-h2">O mês, post a post</h2>
+    <p class="lede" id="ranking-lede">Cada barra é um post do mês, do melhor ao pior engajamento.</p>
+    <div class="legend" id="legend"></div>
+    <div class="chart-card">
+      <h3 id="ranking-titulo">Ranking de engajamento</h3>
+      <p class="hint">Linha tracejada = mediana da seleção. Passe o mouse numa barra para detalhes.</p>
+      <div id="chart-bars"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Alcance × engajamento</h3>
+      <p class="hint">Escala de alcance logarítmica; o tamanho do ponto é o volume de compartilhamentos.</p>
+      <div id="chart-scatter"></div>
+    </div>
+  </section>
+
+  <section class="mes-view" id="sec-arquetipos">
+    <h2>Arquétipos: quem faz o quê</h2>
+    <p class="lede" id="arq-lede">Classificação das legendas por IA. Cada arquétipo tem uma função — o erro seria cobrar alcance de quem entrega profundidade, e vice-versa.</p>
+    <div class="table-scroll">
+      <table class="arq-table">
+        <thead>
+          <tr>
+            <th>Arquétipo</th><th class="num-col">Posts</th><th class="num-col">Engaj. médio</th>
+            <th class="num-col">Share rate</th><th class="num-col">Save rate</th><th class="num-col">Alcance médio</th><th>Função no mix</th>
+          </tr>
+        </thead>
+        <tbody id="arq-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mes-view">
+    <h2>Raio-X das legendas</h2>
+    <p class="lede">O texto influencia o resultado? Comparativos da seleção atual — chamada pra ação, pergunta e tamanho da legenda. Amostras pequenas: leia como direção.</p>
+    <div class="grid-2" id="raiox"></div>
+  </section>
+
+  <section class="mes-view" id="sec-conversa">
+    <h2>A conversa</h2>
+    <p class="lede">Comentários como métrica da seleção: volume, <strong>taxa de conversa</strong> (comentários ÷ alcance — quanto o conteúdo puxa papo por pessoa alcançada) e os posts que mais geraram comentário, com as vozes mais curtidas do público em cada um (arquivo permanente, alimentado a cada atualização).</p>
+    <div id="conversa-corpo"></div>
+  </section>
+
+  <section class="curated mes-view">
+    <h2>O que não viaja</h2>
+    <div class="avoid">
+      <h3>Conteúdo institucional e pessoal não sai da base</h3>
+      <p>Os 9 posts sobre você, clientes ou oferta do livro alcançaram em média <strong>3.027 pessoas</strong> — cerca de
+      <strong>50× menos</strong> que a média do mês — com share rate de <strong>0,42%</strong> (⅓ da média). A base curte por afeto,
+      mas ninguém encaminha post sobre o autor. É o mesmo padrão do benchmark que analisamos: afeto não é distribuição.</p>
+      <p><strong>Não é para parar de fazer</strong> — esses posts têm função comercial. É para não esperar alcance deles, e preferir
+      embutir a oferta dentro de um post de tese: o post de 30/06 ("feito por humano é o novo orgânico") fez <strong>18,5%</strong>
+      de engajamento com o pitch do livro dentro da própria narrativa.</p>
+    </div>
+  </section>
+
+  <section class="curated mes-view">
+    <h2>Pauta — sobre o que falar nas próximas semanas</h2>
+    <p class="lede">Sugestões geradas do cruzamento entre o que mais roda, o que está subutilizado e o calendário.
+    Esta seção se refaz a cada fechamento de mês, com os dados novos.</p>
+    <div class="recs">
+      <div class="rec">
+        <h3>Fale sobre: a "Serra Verde" da semana</h3>
+        <p><strong>Por quê:</strong> newsjacking de indignação é seu formato mais encaminhável — o post das terras raras
+        fez share rate de 4,55%, o maior do top 5 de junho.</p>
+        <p><strong>Como:</strong> escolher a notícia econômica quente da semana em que o Brasil "exporta o bruto e compra
+        o pronto" (commodity, IA, cultura, streaming) e ler pela tese. Publicar terça ou sexta, à noite.</p>
+      </div>
+      <div class="rec">
+        <h3>Fale sobre: a final da Copa como julgamento da marca Brasil</h3>
+        <p><strong>Por quê:</strong> Copa &amp; futebol carregou metade do alcance de junho, e tese × Copa são seus 3 maiores
+        hits. A final em 19/07 é o último gancho deste ciclo — depois, acabou.</p>
+        <p><strong>Como:</strong> um carrossel pré-final (variação do vira-lata, que já rodou 3× no topo) e um pós-final
+        escrito para funcionar com qualquer resultado: "o que esta campanha diz sobre como o Brasil se enxerga".</p>
+      </div>
+      <div class="rec">
+        <h3>Reviva um hit de maio</h3>
+        <p><strong>Por quê:</strong> maio é o teto do semestre (28,7 mi de alcance, mediana 12,6%) e repost comprovadamente
+        funciona: o vira-lata rendeu +1,6 mi de alcance repostado, sempre acima de 14,7% de engajamento.</p>
+        <p><strong>Como:</strong> repostar 1–2 carrosséis de maio com maior share rate, capa nova, legenda intacta.
+        E embutir o CTA do livro dentro deles — post de oferta separado alcança 50× menos.</p>
+      </div>
+      <div class="rec">
+        <h3>Uma história humana na sexta à noite</h3>
+        <p><strong>Por quê:</strong> o arquétipo fez 13,3% de engajamento médio com só 3 posts em junho — subutilizado.
+        E sexta à noite é o slot nobre da conta (12,8% de mediana no dia, 11,8% na faixa).</p>
+        <p><strong>Como:</strong> personagem real com arco "ninguém via → o mundo viu", fechando na tese. De quebra,
+        tirar posts da faixa do almoço (12–15h), a pior do semestre.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mes-view" id="sec-tabela">
+    <h2 id="tabela-titulo">Todos os posts do mês</h2>
+    <details>
+      <summary>Abrir tabela completa (ordenada por engajamento)</summary>
+      <div class="details-body" id="full-table-holder"></div>
+    </details>
+  </section>
+
+  <section id="sec-vozes" style="display:none">
+    <h2>Vozes do público</h2>
+    <p class="lede" id="vozes-lede"></p>
+    <div class="insights" id="vozes-cards"></div>
+  </section>
+
+  <section id="sec-capas" style="display:none">
+    <h2>Capas — o que o slide 1 diz</h2>
+    <p class="lede" id="capas-lede"></p>
+    <div class="insights" id="capas-cards"></div>
+  </section>
+
+  <footer>
+    <p><strong>Metodologia.</strong> Fonte: Instagram Graph API via Windsor.ai, 1 linha por post — todo o histórico que a API
+    entrega, de jan/2025 até a data de atualização exibida na tela Hoje (a API não retorna dados anteriores a 2025; o mês
+    corrente aparece marcado como parcial). Engajamento = (curtidas + comentários + salvamentos + compartilhamentos) ÷ alcance —
+    medido sobre <em>quem viu</em>, não sobre o total de seguidores, então é naturalmente mais alto que uma taxa sobre seguidores.
+    Posts de menos de 72h são marcados como <strong>⏳ provisório</strong>: na API do Instagram as interações entram rápido mas o
+    alcance continua subindo por 1–3 dias, o que infla a taxa de engajamento dos posts frescos; por isso eles ficam visíveis mas
+    fora do cálculo das medianas, que refletem só o desempenho já consolidado.
+    Fuso: São Paulo. Arquétipos classificados por IA a partir das legendas (disponível para carrosséis de junho; demais
+    formatos e meses recebem curadoria no fechamento de cada mês). Buckets de dia/horário têm n pequeno por célula —
+    leia como direção, não como lei. Análise estatística executada localmente (scripts Node + JavaScript no navegador,
+    sem consumo de API de IA); curadoria qualitativa por Claude.</p>
+  </footer>
+</div>
+
+<div id="zoom-fundo" aria-hidden="true"></div>
+<div id="zoom-caixa" role="dialog" aria-modal="true" aria-label="Gráfico expandido">
+  <div id="zoom-conteudo"></div>
+  <button id="zoom-fechar" aria-label="Fechar gráfico expandido">✕</button>
+</div>
+
+<script>
+  const DATA = {"curadoria":{"mes":"","formato":""},"arquetipos":null,"atualizadoEm":"2026-08-04 11:20","seguidores":[{"date":"2026-07-07","novos":3},{"date":"2026-07-09","novos":2},{"date":"2026-07-10","novos":1},{"date":"2026-07-11","novos":2},{"date":"2026-07-12","novos":2},{"date":"2026-07-13","novos":1},{"date":"2026-07-14","novos":1},{"date":"2026-07-16","novos":1},{"date":"2026-07-17","novos":1},{"date":"2026-07-18","novos":4},{"date":"2026-07-19","novos":2},{"date":"2026-07-20","novos":2},{"date":"2026-07-23","novos":2},{"date":"2026-07-24","novos":1},{"date":"2026-07-26","novos":2},{"date":"2026-07-27","novos":1},{"date":"2026-07-30","novos":12},{"date":"2026-07-31","novos":3},{"date":"2026-08-02","novos":3}],"seguidoresDetalhe":[{"date":"2026-07-25","ganhos":0,"perdidos":0,"saldo":0,"fonte":"meta"},{"date":"2026-07-26","ganhos":2,"perdidos":0,"saldo":2,"fonte":"meta"},{"date":"2026-07-27","ganhos":1,"perdidos":0,"saldo":1,"fonte":"meta"},{"date":"2026-07-28","ganhos":0,"perdidos":0,"saldo":0,"fonte":"meta"},{"date":"2026-07-29","ganhos":0,"perdidos":1,"saldo":-1,"fonte":"meta"},{"date":"2026-07-30","ganhos":12,"perdidos":3,"saldo":9,"fonte":"meta"},{"date":"2026-07-31","ganhos":3,"perdidos":2,"saldo":1,"fonte":"meta"},{"date":"2026-08-01","ganhos":0,"perdidos":3,"saldo":-3,"fonte":"meta"},{"date":"2026-08-02","ganhos":3,"perdidos":2,"saldo":1,"fonte":"meta"}],"totalSeguidores":1429,"snapshots":[{"em":"2026-08-04 11:20","total":1429}],"insightsHoje":null,"comentarios":null,"capas":null,"analises":null,"comentariosRecentes":[{"link":"https://www.instagram.com/p/DbnuSCcxHT1/","legenda":"Sou filho de contadores e cresci dentro de um escritório. Passei por quase todos os setores, do backoffice até a entrega de resultado pro cliente, e nesses 12 anos vi de ","tipo":"estatico","thumb":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAeKADAAQAAAABAAAAeAAAAAD/4QnKaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgcGhvdG9zaG9wOkluc3RydWN0aW9ucz0iRkJNRDIzMDAwOTZhMDEwMDAwNTE0NTAwMDA2YzUwMDAwMDU3NWIwMDAwYzg5MzAwMDAwZGMyMDAwMGU4Y2UwMDAwMTkxOTAxMDBjMzJmMDEwMDU2M2IwMTAwIi8+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPD94cGFja2V0IGVuZD0idyI/PgD/7QCmUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAG4cAVoAAxslRxwCAAACAAIcAigAWkZCTUQyMzAwMDk2YTAxMDAwMDUxNDUwMDAwNmM1MDAwMDA1NzViMDAwMGM4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","alcance":18,"ts":"2026-08-04 10:59","nComentarios":1,"comentariosRecentes":1,"comentarios":[{"t":"Fera!! Inspiração 🔥👏🏻","likes":0}]}],"medianasHistoricas":{"carrossel":{"n":0,"alcanceMediano":0,"engajMediano":0,"shareMedio":0},"estatico":{"n":1,"alcanceMediano":18,"engajMediano":100,"shareMedio":0},"reel":{"n":0,"alcanceMediano":0,"engajMediano":0,"shareMedio":0}},"posts":[{"ts":"2026-08-04 10:59","mes":"2026-08","semana":"2026-08-03","dia":"ter","hora":10,"tipo":"estatico","alcance":18,"views":159,"curtidas":17,"comentarios":1,"saves":0,"shares":0,"engaj":100,"shareRate":0,"saveRate":0,"legenda":"Sou filho de contadores e cresci dentro de um escritório. Passei por quase todos os setores, do backoffice até a entrega de resultado pro cliente, e nesses 12 anos vi de ","legTam":1300,"cta":1,"pergunta":0,"link":"https://www.instagram.com/p/DbnuSCcxHT1/","arq":null,"follows":0,"visitas":0,"thumb":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAeKADAAQAAAABAAAAeAAAAAD/4QnKaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgcGhvdG9zaG9wOkluc3RydWN0aW9ucz0iRkJNRDIzMDAwOTZhMDEwMDAwNTE0NTAwMDA2YzUwMDAwMDU3NWIwMDAwYzg5MzAwMDAwZGMyMDAwMGU4Y2UwMDAwMTkxOTAxMDBjMzJmMDEwMDU2M2IwMTAwIi8+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPD94cGFja2V0IGVuZD0idyI/PgD/7QCmUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAG4cAVoAAxslRxwCAAACAAIcAigAWkZCTUQyMzAwMDk2YTAxMDAwMDUxNDUwMDAwNmM1MDAwMDA1NzViMDAwMGM4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","vozes":[{"t":"Fera!! Inspiração 🔥👏🏻","likes":0}],"provisorio":1}]};
+
+  const FORMATOS = {
+    global:    { label: 'Visão global', nome: 'posts',      cor: '#17211B', linha: '#157A46', claro: '#D9DEDB' },
+    carrossel: { label: 'Carrosséis',   nome: 'carrosséis', cor: '#157A46', linha: '#157A46', claro: '#CBE3D4' },
+    estatico:  { label: 'Estáticos',    nome: 'estáticos',  cor: '#C97A1A', linha: '#C97A1A', claro: '#F0DFC4' },
+    reel:      { label: 'Reels',        nome: 'reels',      cor: '#1D5FA8', linha: '#1D5FA8', claro: '#CBDBEE' }
+  };
+  // ordem das pílulas: Hoje abre, Semana dá a leitura macro consolidada, Visão global fecha
+  const TABS = { hoje: { label: 'Hoje', cor: '#17211B' }, semana: { label: 'Semana', cor: '#2C8577' }, carrossel: FORMATOS.carrossel, estatico: FORMATOS.estatico, reel: FORMATOS.reel, global: FORMATOS.global };
+  const ARQ_PADRAO = {
+    'Tese Brasil':             { cor: '#157A46', funcao: 'Máquina de engajamento — a tese central' },
+    'Copa & futebol':          { cor: '#1D5FA8', funcao: 'Máquina de alcance — o gancho quente' },
+    'Cases & tendências':      { cor: '#C97A1A', funcao: 'Sustentação — prova a tese com marcas' },
+    'Teoria & reflexão':       { cor: '#7A5CB8', funcao: 'Profundidade — mais salvo que compartilhado' },
+    'Histórias humanas':       { cor: '#C2503F', funcao: 'Emoção — comove, engaja, alcança pouco' },
+    'Institucional & pessoal': { cor: '#9AA09C', funcao: 'Comercial — não espere alcance daqui' }
+  };
+  const ARQ = DATA.arquetipos || ARQ_PADRAO; // cada conta pode ter sua taxonomia (conta.json)
+  const COR_SEM_ARQ = '#C4CCC7';
+  const WHY = [
+    '<strong>A tese na veia, com indignação compartilhável.</strong> "O brasileiro cria no mais alto nível e o crédito se perde" é a frase que a pessoa manda pro amigo dizendo "isso é sobre nós". Share rate de 3,31% E save rate de 2,90% — roda e é guardado ao mesmo tempo, combinação rara.',
+    '<strong>Newsjacking da tese: fato novo + indignação.</strong> A venda da Serra Verde é notícia de 2026 lida pela lente "exporta o bruto, compra caro o pronto". O maior share rate do top 5 (4,55%): indignação com fato concreto é o conteúdo mais encaminhável que existe.',
+    '<strong>O espelho positivo da tese: orgulho, não indignação.</strong> Brasil emplacando no Oscar dois anos seguidos prova que a tese funciona nos dois polos emocionais. Validação externa ("a crítica do LA Times escreveu…") dá a moeda social do "eu te disse".',
+    '<strong>Prova empilhada.</strong> Nióbio, bauxita, turmalina, café — quatro exemplos concretos do mesmo padrão, um atrás do outro, sem afirmar a moral: o leitor conclui sozinho. Share rate 3,61% num post de fundamento, sem gancho de notícia.',
+    '<strong>Tendência quente lida pela tese — com a oferta dentro.</strong> "Feito por humano é o novo orgânico" pega o debate de IA de 2026 e o devolve como argumento de branding. E fecha com o pitch do livro embutido: 18,5% de engajamento COM oferta. É o modelo a copiar.'
+  ];
+  const ORDENS = {
+    engaj:    { label: 'Taxa de engajamento', val: (p) => p.engaj,    big: (p) => pct(p.engaj) },
+    curtidas: { label: 'Curtidas',            val: (p) => p.curtidas, big: (p) => compact(p.curtidas) },
+    alcance:  { label: 'Alcance',             val: (p) => p.alcance,  big: (p) => compact(p.alcance) },
+    shares:   { label: 'Compartilhamentos',   val: (p) => p.shares,   big: (p) => compact(p.shares) },
+    shareRate:{ label: 'Share rate',          val: (p) => p.shareRate, big: (p) => pct(p.shareRate) },
+    follows:  { label: 'Seguidores ganhos',   val: (p) => p.follows || 0, big: (p) => '+' + fmt.format(p.follows || 0), precisaDado: 'follows' },
+    // a métrica que separa alcance de aquisição: quantos seguidores cada mil pessoas alcançadas viraram
+    convSeg:  { label: 'Conversão de seguidores', val: (p) => p.alcance ? (p.follows || 0) / p.alcance : 0, big: (p) => ((p.follows || 0) / Math.max(1, p.alcance) * 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '/mil', precisaDado: 'follows' }
+  };
+  let ordem = 'engaj';
+  const MES_NOME = { '01': 'jan', '02': 'fev', '03': 'mar', '04': 'abr', '05': 'mai', '06': 'jun', '07': 'jul', '08': 'ago', '09': 'set', '10': 'out', '11': 'nov', '12': 'dez' };
+  const MES_LONGO = { '01': 'janeiro', '02': 'fevereiro', '03': 'março', '04': 'abril', '05': 'maio', '06': 'junho', '07': 'julho', '08': 'agosto', '09': 'setembro', '10': 'outubro', '11': 'novembro', '12': 'dezembro' };
+
+  const MESES = [...new Set(DATA.posts.map((p) => p.mes))].sort();
+  const NAV = [...MESES, 'tudo'];
+  const RANGE_CURTO = MES_NOME[MESES[0].slice(5)] + '/' + MESES[0].slice(2, 4) + ' a ' + MES_NOME[MESES[MESES.length - 1].slice(5)] + '/' + MESES[MESES.length - 1].slice(2, 4);
+  // janelas da visão global (pílulas): quantos meses entram na conta
+  const PERIODOS = { m3: { label: 'Últimos 3 meses', n: 3 }, m6: { label: 'Últimos 6 meses', n: 6 }, a1: { label: 'Último ano', n: 12 }, tudo: { label: 'Tudo', n: 0 } };
+  const rangeMeses = (ms) => {
+    const rot = (m) => MES_NOME[m.slice(5)] + '/' + m.slice(2, 4);
+    return ms.length ? (ms.length === 1 ? rot(ms[0]) : rot(ms[0]) + '–' + rot(ms[ms.length - 1])) : '';
+  };
+  let state = { mes: DATA.curadoria.mes || MESES[MESES.length - 1], formato: 'hoje', periodo: 'tudo' }; // sem curadoria, cai no mês mais recente
+  (function fromHash() {
+    const raw = location.hash.slice(1);
+    if (raw === 'hoje' || raw === '') return; // abre na tela Hoje
+    if (raw === 'semana') { state.formato = 'semana'; return; }
+    const h = raw.split('/');
+    if (h.length >= 2 && NAV.includes(h[0]) && FORMATOS[h[1]]) state = { mes: h[0], formato: h[1], periodo: h[1] === 'global' && PERIODOS[h[2]] ? h[2] : 'tudo' };
+    if (state.formato === 'global') state.mes = 'tudo'; // visão global é sempre período, nunca um mês
+  })();
+
+  const $ = (id) => document.getElementById(id);
+  const setHash = (h) => { try { if (location.hash.slice(1) !== h) history.replaceState(null, '', '#' + h); } catch (e) { location.hash = h; } };
+  const fmt = new Intl.NumberFormat('pt-BR');
+  const pct = (v) => v.toFixed(2).replace('.', ',') + '%';
+  const pct1 = (v) => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
+  const compact = (v) => v >= 1e6 ? (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi'
+    : v >= 1e3 ? Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil' : String(v);
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+  const mean = (a) => (a.length ? sum(a) / a.length : 0);
+  const median = (a) => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+  // posts provisórios (< 72h): alcance ainda subindo → engajamento inflado. Ficam visíveis (com selo ⏳) mas fora das medianas.
+  const maduros = (arr) => { const m = (arr || []).filter((p) => !p.provisorio); return m.length ? m : (arr || []); };
+  const medEng = (arr) => median(maduros(arr).map((p) => p.engaj));
+  const temProvisorio = (arr) => (arr || []).some((p) => p.provisorio);
+  const seloProv = (p) => p && p.provisorio ? ' <span class="prov" title="Publicado nas últimas 72h — o alcance ainda está subindo na API, então a taxa de engajamento está inflada e vai assentar nos próximos dias. Fica de fora das medianas.">⏳ provisório</span>' : '';
+  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+
+  const curado = () => state.mes === DATA.curadoria.mes && state.formato === DATA.curadoria.formato;
+  const postsDe = (formato, mes) => DATA.posts.filter((p) => (formato === 'global' || p.tipo === formato) && (!mes || mes === 'tudo' || p.mes === mes));
+  const TEM_ARQ = DATA.posts.some((p) => p.arq);
+  const corPost = (p) => state.formato === 'global' ? FORMATOS[p.tipo].cor
+    : (p.arq && ARQ[p.arq] ? ARQ[p.arq].cor : (TEM_ARQ ? COR_SEM_ARQ : FORMATOS[state.formato].cor));
+  const dataBR = (ts) => ts.slice(8, 10) + '/' + ts.slice(5, 7) + (state.mes === 'tudo' ? '/' + ts.slice(2, 4) : '');
+  const diaMes = (s) => s && s.length >= 10 ? s.slice(8, 10) + '/' + s.slice(5, 7) : ''; // "AAAA-MM-DD HH:MM" → "DD/MM"
+  const carimboIA = (quando) => diaMes(quando) ? '<div class="card-data">🔄 atualizado por IA · ' + diaMes(quando) + '</div>' : '';
+
+  /* ---------- navegação ---------- */
+  $('tabs').innerHTML = Object.entries(TABS).map(([id, f]) =>
+    '<button class="tab" role="tab" data-formato="' + id + '" aria-selected="false">' + f.label + '</button>').join('');
+  let lastMes = state.mes === 'tudo' ? MESES[MESES.length - 1] : state.mes;
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => {
+    const anterior = state.formato;
+    state.formato = b.dataset.formato;
+    if (state.formato === 'global') state.mes = 'tudo';
+    // saindo de global/hoje/semana (que podem ter herdado mes='tudo' via hash) pra um formato → volta pro último mês visto
+    else if ((anterior === 'global' || anterior === 'hoje' || anterior === 'semana') && state.mes === 'tudo') state.mes = lastMes;
+    renderAll();
+  }));
+  $('ordem-pills').innerHTML = Object.entries(ORDENS)
+    .filter(([, o]) => !o.precisaDado || DATA.posts.some((p) => p[o.precisaDado] !== undefined))
+    .map(([id, o]) => '<button class="sort-pill" data-ordem="' + id + '" aria-pressed="' + (id === ordem) + '">' + o.label + '</button>').join('');
+  document.querySelectorAll('#ordem-pills .sort-pill').forEach((b) => b.addEventListener('click', () => { ordem = b.dataset.ordem; renderAll(); }));
+  $('periodonav').innerHTML = Object.entries(PERIODOS)
+    .map(([id, p]) => '<button class="sort-pill" data-periodo="' + id + '" aria-pressed="' + (id === state.periodo) + '">' + p.label + '</button>').join('');
+  document.querySelectorAll('#periodonav .sort-pill').forEach((b) => b.addEventListener('click', () => { state.periodo = b.dataset.periodo; renderAll(); }));
+  // navegação por seções (rolagem, sem mexer no hash do app)
+  const SUBNAV = [['sec-leituras-periodo', 'Leituras'], ['sec-pautas', 'O que produzir'], ['sec-top5', 'Top 5'], ['sec-graficos', 'Gráficos'], ['sec-conversa', 'Conversa'], ['sec-arquetipos', 'Arquétipos'], ['sec-tabela', 'Tabela']];
+  $('subnav').innerHTML = SUBNAV.map(([id, l]) => '<button data-alvo="' + id + '">' + l + '</button>').join('');
+  document.querySelectorAll('#subnav button').forEach((b) => b.addEventListener('click', () => {
+    const el = document.getElementById(b.dataset.alvo);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+  $('mes-prev').addEventListener('click', () => { const i = NAV.indexOf(state.mes); if (i > 0) { state.mes = NAV[i - 1]; renderAll(); } });
+  $('mes-next').addEventListener('click', () => { const i = NAV.indexOf(state.mes); if (i < NAV.length - 1) { state.mes = NAV[i + 1]; renderAll(); } });
+  window.addEventListener('hashchange', () => {
+    const raw = location.hash.slice(1);
+    if (raw === 'hoje') { if (state.formato !== 'hoje') { state.formato = 'hoje'; renderAll(); } return; }
+    if (raw === 'semana') { if (state.formato !== 'semana') { state.formato = 'semana'; renderAll(); } return; }
+    const h = raw.split('/');
+    if (h.length >= 2 && NAV.includes(h[0]) && FORMATOS[h[1]]) {
+      const per = h[1] === 'global' && PERIODOS[h[2]] ? h[2] : 'tudo';
+      if (h[0] !== state.mes || h[1] !== state.formato || per !== state.periodo) {
+        state = { mes: h[1] === 'global' ? 'tudo' : h[0], formato: h[1], periodo: per }; renderAll();
+      }
+    }
+  });
+
+  /* ---------- gráficos ---------- */
+  function barrasRanking(el, posts) {
+    if (!posts.length) { $(el).innerHTML = '<p class="vazio">Sem posts nesta seleção.</p>'; return; }
+    const W = 1000, H = 300, padL = 44, padB = 24, padT = 14;
+    const engs = posts.map((p) => p.engaj);
+    const maxY = Math.max(...engs) * 1.12;
+    const step = Math.max(1, Math.ceil(maxY / 4));
+    const bw = (W - padL - 8) / posts.length;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / maxY);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Ranking de engajamento">';
+    for (let g = 0; g <= maxY; g += step) {
+      s += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="#EEECE7"/>';
+      s += '<text x="' + (padL - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end" font-size="11" fill="#5B6660">' + g + '%</text>';
+    }
+    posts.forEach((p, i) => {
+      const x = padL + i * bw, h = (H - padT - padB) * (p.engaj / maxY);
+      const w = Math.min(bw * 0.76, 60), off = (bw - w) / 2;
+      s += '<rect x="' + (x + off) + '" y="' + (H - padB - h) + '" width="' + w + '" height="' + h + '" rx="1.5" fill="' + corPost(p) + '" opacity="0.9">' +
+        '<title>#' + (i + 1) + ' · ' + dataBR(p.ts) + (p.arq ? ' · ' + p.arq : (state.formato === 'global' ? ' · ' + FORMATOS[p.tipo].label : '')) +
+        '\nEngajamento ' + pct(p.engaj) + ' · Alcance ' + fmt.format(p.alcance) +
+        '\n' + fmt.format(p.shares) + ' comp. · ' + fmt.format(p.saves) + ' salv.' +
+        '\n“' + esc(p.legenda.slice(0, 110)) + '…”</title></rect>';
+    });
+    const med = medEng(posts); // linha da mediana ignora provisórios (barras aparecem todas, escala usa engs)
+    s += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(med) + '" y2="' + y(med) + '" stroke="#17211B" stroke-width="1" stroke-dasharray="5 4"/>';
+    s += '<text x="' + (W - 4) + '" y="' + (y(med) - 6) + '" text-anchor="end" font-size="11" font-weight="600" fill="#17211B">mediana ' + pct1(med) + '</text>';
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function dispersao(el, posts) {
+    if (!posts.length) { $(el).innerHTML = '<p class="vazio">Sem posts nesta seleção.</p>'; return; }
+    const W = 1000, H = 360, padL = 44, padB = 34, padT = 12, padR = 14;
+    const maxY = Math.max(...posts.map((p) => p.engaj)) * 1.15;
+    const step = Math.max(1, Math.ceil(maxY / 4));
+    const alcMin = Math.max(150, Math.min(...posts.map((p) => Math.max(p.alcance, 150))));
+    const alcMax = Math.max(...posts.map((p) => p.alcance), 1000);
+    const minLog = Math.log10(alcMin) - 0.1, maxLog = Math.log10(alcMax) + 0.08;
+    const x = (a) => padL + (W - padL - padR) * ((Math.log10(Math.max(a, 150)) - minLog) / (maxLog - minLog));
+    const y = (v) => padT + (H - padT - padB) * (1 - v / maxY);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Dispersão de alcance por engajamento">';
+    for (let g = 0; g <= maxY; g += step) {
+      s += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="#EEECE7"/>';
+      s += '<text x="' + (padL - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end" font-size="11" fill="#5B6660">' + g + '%</text>';
+    }
+    [[1000, '1 mil'], [10000, '10 mil'], [100000, '100 mil'], [1000000, '1 mi']].forEach(([v, lab]) => {
+      if (Math.log10(v) < minLog || Math.log10(v) > maxLog) return;
+      s += '<line y1="' + padT + '" y2="' + (H - padB) + '" x1="' + x(v) + '" x2="' + x(v) + '" stroke="#EEECE7"/>';
+      s += '<text x="' + x(v) + '" y="' + (H - padB + 18) + '" text-anchor="middle" font-size="11" fill="#5B6660">' + lab + '</text>';
+    });
+    s += '<text x="' + (W - padR) + '" y="' + (H - 4) + '" text-anchor="end" font-size="11" fill="#5B6660">alcance (log) →</text>';
+    posts.forEach((p, i) => {
+      const r = 3.5 + Math.sqrt(p.shares) / 16;
+      s += '<circle cx="' + x(p.alcance) + '" cy="' + y(p.engaj) + '" r="' + r.toFixed(1) + '" fill="' + corPost(p) + '" opacity="0.72" stroke="#FFFFFF" stroke-width="1">' +
+        '<title>#' + (i + 1) + ' · ' + dataBR(p.ts) + '\nEngajamento ' + pct(p.engaj) + ' · Alcance ' + fmt.format(p.alcance) +
+        '\n' + fmt.format(p.shares) + ' compartilhamentos\n“' + esc(p.legenda.slice(0, 110)) + '…”</title></circle>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function comboMensal(el, serie, corBase) {
+    const W = 1000, H = 320, padL = 16, padB = 30, padT = 34, padR = 16;
+    const maxN = Math.max(...serie.map((m) => m.n), 1) * 1.25;
+    const maxE = Math.max(...serie.map((m) => m.mediana), 1) * 1.35;
+    const bw = (W - padL - padR) / serie.length;
+    const yN = (v) => padT + (H - padT - padB) * (1 - v / maxN);
+    const yE = (v) => padT + (H - padT - padB) * (1 - v / maxE);
+    const comAno = serie.length > 8 || new Set(serie.map((m) => m.mes.slice(0, 4))).size > 1;
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Volume e engajamento por mês">';
+    serie.forEach((m, i) => {
+      const x = padL + i * bw;
+      s += '<rect x="' + (x + bw * 0.2) + '" y="' + yN(m.n) + '" width="' + (bw * 0.6) + '" height="' + (H - padB - yN(m.n)) + '" rx="3" fill="' + FORMATOS[state.formato].claro + '" stroke="' + (m.mes === state.mes ? corBase : 'none') + '" stroke-width="1.5">' +
+        '<title>' + MES_NOME[m.mes.slice(5)] + '/' + m.mes.slice(2, 4) + ': ' + m.n + ' posts' + (m.parcial ? ' (mês em andamento)' : '') + '\nEngaj. mediano ' + pct1(m.mediana) + '\nAlcance ' + compact(m.alcance) + '</title></rect>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (yN(m.n) - 7) + '" text-anchor="middle" font-size="11" fill="#5B6660">' + m.n + '</text>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" font-weight="' + (m.mes === state.mes ? '700' : '400') + '" fill="' + (m.mes === state.mes ? '#17211B' : '#5B6660') + '">' + MES_NOME[m.mes.slice(5)] + (comAno ? '/' + m.mes.slice(2, 4) : '') + (m.parcial ? '*' : '') + '</text>';
+    });
+    const comN = serie.map((m, i) => ({ m, i })).filter((o) => o.m.n > 0); // meses sem posts ficam fora da linha
+    const pts = comN.map((o) => [padL + o.i * bw + bw / 2, yE(o.m.mediana)]);
+    s += '<polyline points="' + pts.map((p) => p.join(',')).join(' ') + '" fill="none" stroke="' + corBase + '" stroke-width="2.5"/>';
+    const modM = Math.max(1, Math.ceil(comN.length / 9));
+    pts.forEach((p, j) => {
+      s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (comN.length > 10 ? 3 : 4) + '" fill="' + corBase + '"/>';
+      s += '<text' + (j % modM === 0 || j === comN.length - 1 ? '' : ' class="lbl-extra"') + ' x="' + p[0] + '" y="' + (p[1] - 10) + '" text-anchor="middle" font-size="11.5" font-weight="600" fill="' + corBase + '">' + pct1(comN[j].m.mediana) + '</text>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function barrasAlcance(el, serie, corBase) {
+    const W = 1000, H = 320, padL = 16, padB = 30, padT = 34, padR = 16;
+    const maxA = Math.max(...serie.map((m) => m.alcance), 1) * 1.18;
+    const bw = (W - padL - padR) / serie.length;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / maxA);
+    const comAno = serie.length > 8 || new Set(serie.map((m) => m.mes.slice(0, 4))).size > 1;
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Alcance total por mês">';
+    serie.forEach((m, i) => {
+      const x = padL + i * bw;
+      s += '<rect x="' + (x + bw * 0.2) + '" y="' + y(m.alcance) + '" width="' + (bw * 0.6) + '" height="' + (H - padB - y(m.alcance)) + '" rx="3" fill="' + (m.mes === state.mes ? corBase : FORMATOS[state.formato].claro) + '">' +
+        '<title>' + MES_NOME[m.mes.slice(5)] + '/' + m.mes.slice(2, 4) + ': ' + compact(m.alcance) + ' de alcance' + (m.parcial ? ' (mês em andamento)' : '') + '\n' + compact(m.shares) + ' compartilhamentos</title></rect>';
+      const maxIdx = serie.reduce((mi, mm, j) => (mm.alcance > serie[mi].alcance ? j : mi), 0);
+      const mostraValor = serie.length <= 8 || i % 3 === 0 || i === serie.length - 1 || i === maxIdx || m.mes === state.mes;
+      s += '<text' + (mostraValor ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (y(m.alcance) - 7) + '" text-anchor="middle" font-size="11" font-weight="600" fill="#17211B">' + compact(m.alcance) + '</text>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" font-weight="' + (m.mes === state.mes ? '700' : '400') + '" fill="' + (m.mes === state.mes ? '#17211B' : '#5B6660') + '">' + MES_NOME[m.mes.slice(5)] + (comAno ? '/' + m.mes.slice(2, 4) : '') + (m.parcial ? '*' : '') + '</text>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function comboSemanal(el, serie, corBase) {
+    if (!serie.length) { $(el).innerHTML = '<p class="vazio">Sem dados.</p>'; return; }
+    const W = 1000, H = 300, padL = 16, padB = 34, padT = 30, padR = 16;
+    const maxN = Math.max(...serie.map((w) => w.n)) * 1.3;
+    const maxE = Math.max(...serie.map((w) => w.mediana)) * 1.3;
+    const bw = (W - padL - padR) / serie.length;
+    const yN = (v) => padT + (H - padT - padB) * (1 - v / maxN);
+    const yE = (v) => padT + (H - padT - padB) * (1 - v / maxE);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Volume e engajamento por semana">';
+    serie.forEach((w, i) => {
+      const x = padL + i * bw;
+      s += '<rect x="' + (x + bw * 0.18) + '" y="' + yN(w.n) + '" width="' + (bw * 0.64) + '" height="' + (H - padB - yN(w.n)) + '" rx="2" fill="' + FORMATOS[state.formato].claro + '" stroke="' + (w.destaque ? corBase : 'none') + '" stroke-width="1.5">' +
+        '<title>Semana de ' + (w.labelFull || w.label) + ': ' + w.n + ' posts\nEngaj. mediano ' + pct1(w.mediana) + '\nAlcance ' + compact(w.alcance) + '</title></rect>';
+      const modS = Math.max(2, Math.ceil(serie.length / 13));
+      s += '<text' + (i % modS === 0 ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="10.5" fill="#5B6660">' + w.label + '</text>';
+    });
+    const pts = serie.map((w, i) => [padL + i * bw + bw / 2, yE(w.mediana)]);
+    s += '<polyline points="' + pts.map((p) => p.join(',')).join(' ') + '" fill="none" stroke="' + corBase + '" stroke-width="2"/>';
+    const maxIdx = serie.reduce((mi, w, i) => (w.mediana > serie[mi].mediana ? i : mi), 0);
+    const minIdx = serie.reduce((mi, w, i) => (w.mediana < serie[mi].mediana ? i : mi), 0);
+    pts.forEach((p, i) => {
+      s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3" fill="' + corBase + '"/>';
+      s += '<text' + (i === maxIdx || i === minIdx || i === serie.length - 1 ? '' : ' class="lbl-extra"') + ' x="' + p[0] + '" y="' + (p[1] - 9) + '" text-anchor="middle" font-size="11.5" font-weight="600" fill="' + (i === minIdx ? '#C2503F' : corBase) + '">' + pct1(serie[i].mediana) + '</text>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function linhaTempoMes(el, posts, corBase, mes) {
+    if (!posts.length) { $(el).innerHTML = '<p class="vazio">Sem posts neste mês.</p>'; return; }
+    const nDias = new Date(Date.UTC(+mes.slice(0, 4), +mes.slice(5, 7), 0)).getUTCDate();
+    const porDia = {};
+    posts.forEach((p) => { const d = +p.ts.slice(8, 10); (porDia[d] = porDia[d] || []).push(p); });
+    const alcDia = (d) => sum((porDia[d] || []).map((p) => p.alcance));
+    const dias = Array.from({ length: nDias }, (_, i) => i + 1);
+    const best = dias.reduce((mi, d) => (alcDia(d) > alcDia(mi) ? d : mi), 1);
+    const W = 1000, H = 300, padL = 16, padB = 30, padT = 34, padR = 16;
+    const maxA = Math.max(...dias.map(alcDia), 1) * 1.18;
+    const bw = (W - padL - padR) / nDias;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / maxA);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Alcance por dia do mês">';
+    dias.forEach((d) => {
+      const g = (porDia[d] || []).slice().sort((a, b) => b.alcance - a.alcance);
+      const a = alcDia(d);
+      const x = padL + (d - 1) * bw;
+      if (g.length) {
+        s += '<rect x="' + (x + bw * 0.18) + '" y="' + y(a) + '" width="' + (bw * 0.64) + '" height="' + (H - padB - y(a)) + '" rx="2" fill="' + (d === best ? corBase : FORMATOS[state.formato].claro) + '">' +
+          '<title>' + String(d).padStart(2, '0') + '/' + mes.slice(5, 7) + ': ' + g.length + ' post' + (g.length > 1 ? 's' : '') + ' · ' + compact(a) + ' de alcance\n' +
+          g.slice(0, 3).map((p) => '“' + esc(p.legenda.slice(0, 44)) + '…” (' + compact(p.alcance) + ' · ' + pct1(p.engaj) + ')').join('\n') +
+          (g.length > 3 ? '\n+' + (g.length - 3) + ' post(s)' : '') + '</title></rect>';
+        s += '<text' + (d === best ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (y(a) - 7) + '" text-anchor="middle" font-size="11" font-weight="600" fill="' + (d === best ? '#17211B' : '#5B6660') + '">' + compact(a) + '</text>';
+      }
+      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10.5" font-weight="' + (d === best ? '700' : '400') + '" fill="' + (d === best ? '#17211B' : '#5B6660') + '">' + d + '</text>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  function barrasCategoria(el, itens, labelFn, subFn, corBase) {
+    const comDados = itens.filter((d) => d.n > 0);
+    if (!comDados.length) { $(el).innerHTML = '<p class="vazio">Sem dados.</p>'; return; }
+    const W = 1000, H = 300, padL = 16, padB = 46, padT = 34, padR = 16;
+    const maxE = Math.max(...itens.map((d) => d.mediana)) * 1.25;
+    const bw = (W - padL - padR) / itens.length;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / maxE);
+    const best = itens.reduce((mi, d, i) => (d.mediana > itens[mi].mediana ? i : mi), 0);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img">';
+    itens.forEach((d, i) => {
+      const x = padL + i * bw;
+      s += '<rect x="' + (x + bw * 0.16) + '" y="' + y(d.mediana) + '" width="' + (bw * 0.68) + '" height="' + (H - padB - y(d.mediana)) + '" rx="3" fill="' + (i === best ? corBase : '#CFD6D2') + '">' +
+        '<title>' + labelFn(d) + ': mediana ' + pct1(d.mediana) + '\n' + d.n + ' posts</title></rect>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (y(d.mediana) - 8) + '" text-anchor="middle" font-size="13" font-weight="600" fill="' + (i === best ? corBase : '#5B6660') + '">' + (d.n ? pct1(d.mediana) : '—') + '</text>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 26) + '" text-anchor="middle" font-size="12.5" fill="#17211B">' + labelFn(d) + '</text>';
+      s += '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" fill="#5B6660">' + subFn(d) + '</text>';
+    });
+    s += '</svg>';
+    $(el).innerHTML = s;
+  }
+
+  /* ---------- render ---------- */
+  function renderAll() {
+    const isHoje = state.formato === 'hoje';
+    const isSemana = state.formato === 'semana';
+    if (state.formato === 'global') state.mes = 'tudo'; // global não navega meses
+    if (!isHoje && !isSemana && state.mes !== 'tudo') lastMes = state.mes;
+    document.body.classList.toggle('modo-hoje', isHoje);
+    document.body.classList.toggle('modo-semana', isSemana);
+    document.querySelectorAll('.tab').forEach((b) => {
+      const on = b.dataset.formato === state.formato;
+      b.setAttribute('aria-selected', String(on));
+      b.style.background = on ? TABS[b.dataset.formato].cor : '';
+      b.style.color = on ? '#fff' : '';
+    });
+    $('mesnav').style.display = (isHoje || isSemana || state.formato === 'global') ? 'none' : 'flex';
+    $('periodonav').style.display = state.formato === 'global' ? 'flex' : 'none';
+    document.querySelectorAll('#periodonav .sort-pill').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.periodo === (state.periodo || 'tudo'))));
+    if (isHoje) {
+      setHash('hoje');
+      $('h1-label').textContent = 'Hoje';
+      $('sub-label').textContent = 'o pulso da conta agora · dados atualizados em ' + DATA.atualizadoEm + ' (fuso SP)';
+      renderHoje();
+      return;
+    }
+    if (isSemana) {
+      setHash('semana');
+      $('h1-label').textContent = 'Semana';
+      $('sub-label').textContent = 'a leitura macro dos últimos 7 dias — janela em que as métricas já consolidaram · atualizado em ' + DATA.atualizadoEm + ' (fuso SP)';
+      renderSemana();
+      return;
+    }
+    const F = FORMATOS[state.formato];
+    const isTudo = state.mes === 'tudo';
+    const isGlobal = state.formato === 'global';
+    // janela da visão global (pílulas 3m/6m/1a/tudo) — só a global filtra por janela
+    const mesesJanela = isGlobal && state.periodo && state.periodo !== 'tudo' ? MESES.slice(-PERIODOS[state.periodo].n) : null;
+    const mesPosts = postsDe(state.formato, state.mes)
+      .filter((p) => !mesesJanela || mesesJanela.includes(p.mes))
+      .sort((a, b) => b.engaj - a.engaj);
+    const mesLongo = isTudo
+      ? (mesesJanela ? PERIODOS[state.periodo].label.toLowerCase() + ' (' + rangeMeses(mesesJanela) + ')' : 'todo o período (' + RANGE_CURTO + ')')
+      : MES_LONGO[state.mes.slice(5)] + ' ' + state.mes.slice(0, 4);
+    const emPeriodo = (mesesJanela ? 'nos ' : 'em ') + mesLongo; // "nos últimos 3 meses" / "em junho 2026"
+    const mesParcial = !isTudo && state.mes === DATA.atualizadoEm.slice(0, 7);
+    setHash(state.mes + '/' + state.formato + (mesesJanela ? '/' + state.periodo : ''));
+
+    /* header */
+    $('mes-label').textContent = isTudo ? 'todo o período' : mesLongo + (mesParcial ? ' · parcial' : '');
+    $('mes-prev').disabled = state.mes === NAV[0];
+    $('mes-next').disabled = state.mes === NAV[NAV.length - 1];
+    $('h1-label').textContent = F.label + ' — ' + mesLongo;
+    $('sub-label').textContent = mesPosts.length + ' ' + F.nome + ' publicados · fuso São Paulo · engajamento = interações ÷ alcance';
+    $('ranking-titulo').textContent = 'Ranking de engajamento — ' + mesPosts.length + ' ' + F.nome;
+    $('tabela-titulo').textContent = 'Todos os ' + mesPosts.length + ' ' + F.nome + (isTudo ? ' do período' : ' de ' + MES_LONGO[state.mes.slice(5)]);
+    const curadoDetalhe = curado() && ordem === 'engaj';
+    $('winners-titulo').textContent = curadoDetalhe ? 'A receita dos vencedores'
+      : 'Top 5 ' + (isTudo ? (mesesJanela ? 'dos ' + PERIODOS[state.periodo].label.toLowerCase() : 'de todo o período') : 'do mês') + ' — por ' + ORDENS[ordem].label.toLowerCase();
+    $('winners-lede').textContent = curadoDetalhe
+      ? 'Os cinco maiores engajamentos do mês, e por que cada um funcionou. O denominador comum: a tese aplicada a algo concreto e atual, com indignação ou orgulho — emoções que fazem a pessoa encaminhar. Use as pílulas abaixo para reordenar por volume absoluto.'
+      : 'A taxa de engajamento premia quem mais engajou por pessoa alcançada; curtidas, alcance e compartilhamentos mostram os virais em volume absoluto' + (isTudo ? '. A data diz de que mês cada post veio.' : '.');
+    $('ranking-h2').textContent = isTudo ? 'O período, post a post' : 'O mês, post a post';
+    $('ranking-lede').textContent = isTudo
+      ? 'Cada barra é um post ' + (mesesJanela ? 'dos ' : 'de ') + mesLongo + ', do melhor ao pior engajamento' + (mesesJanela ? '.' : ' — o ranking de tudo que a API puxa.')
+      : 'Cada barra é um post do mês, do melhor ao pior engajamento.';
+
+    /* veredito */
+    $('verdict-curado').style.display = curado() ? '' : 'none';
+    $('verdict-auto').style.display = curado() ? 'none' : '';
+    // número do veredito curado sai dos dados (não fica hardcoded divergindo do KPI quando as métricas atualizam)
+    if (curado() && $('vc-med')) $('vc-med').textContent = pct1(medEng(mesPosts));
+    // comparação: mês vs mês anterior; janela da global vs janela anterior do mesmo tamanho (só se ela existir inteira)
+    const janelaAnterior = () => {
+      if (!mesesJanela) return { posts: [], rotulo: '' };
+      const nJ = mesesJanela.length;
+      const ms = MESES.slice(Math.max(0, MESES.length - 2 * nJ), MESES.length - nJ);
+      return ms.length === nJ
+        ? { posts: DATA.posts.filter((p) => ms.includes(p.mes)), rotulo: 'o período anterior (' + rangeMeses(ms) + ')' }
+        : { posts: [], rotulo: '' };
+    };
+    if (!curado()) {
+      const iMes = isTudo ? -1 : MESES.indexOf(state.mes);
+      let prev = iMes > 0 ? postsDe(state.formato, MESES[iMes - 1]) : [];
+      let rotuloPrev = iMes > 0 ? MES_LONGO[MESES[iMes - 1].slice(5)] : '';
+      if (mesesJanela) { const ja = janelaAnterior(); prev = ja.posts; rotuloPrev = ja.rotulo; }
+      const alc = sum(mesPosts.map((p) => p.alcance));
+      const med = medEng(mesPosts);
+      let delta = '';
+      if (prev.length && mesPosts.length && !mesParcial) {
+        const alcPrev = sum(prev.map((p) => p.alcance));
+        const medPrev = medEng(prev);
+        const dAlc = alcPrev ? ((alc - alcPrev) / alcPrev) * 100 : 0;
+        const dMed = med - medPrev;
+        delta = ' Contra ' + rotuloPrev + ': alcance ' +
+          (dAlc >= 0 ? '<strong>+' : '<strong>−') + Math.abs(dAlc).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + '%</strong>' +
+          ' e mediana ' + (dMed >= 0 ? '<strong>+' : '<strong>−') + Math.abs(dMed).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' pp</strong>.' +
+          (mesesJanela ? ' (O mês corrente, parcial, entra na janela.)' : '');
+      }
+      // régua histórica do formato — o comparativo que o analista fazia de cabeça, agora fixo no veredito
+      let regua = '';
+      if (!isTudo && state.formato !== 'global' && DATA.medianasHistoricas && DATA.medianasHistoricas[state.formato] && mesPosts.length) {
+        const rh = DATA.medianasHistoricas[state.formato].engajMediano;
+        const dR = med - rh;
+        regua = ' Régua histórica dos ' + F.nome + ': <strong>' + pct1(rh) + '</strong> — este mês roda ' +
+          (Math.abs(dR) < 0.3 ? '<strong>na régua</strong>.' : '<strong>' + Math.abs(dR).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' pp ' + (dR > 0 ? 'acima' : 'abaixo') + '</strong>.');
+      }
+      $('verdict-auto').innerHTML = mesPosts.length
+        ? (mesParcial ? 'Mês em andamento — dados até <strong>' + DATA.atualizadoEm.slice(8, 10) + '/' + DATA.atualizadoEm.slice(5, 7) + '</strong>, sem comparação com o mês anterior. ' : '') +
+          '<strong>' + mesPosts.length + ' ' + F.nome + '</strong> ' + emPeriodo + ': <strong>' + compact(alc) +
+          '</strong> de alcance e engajamento mediano de <strong>' + pct1(med) + '</strong>.' + delta + regua
+        : 'Sem ' + F.nome + ' publicados ' + emPeriodo + '.';
+    }
+
+    /* KPIs */
+    (function kpis() {
+      const iMes = isTudo ? -1 : MESES.indexOf(state.mes);
+      let prev = iMes > 0 ? postsDe(state.formato, MESES[iMes - 1]) : [];
+      let rotPrev = 'vs mês ant.';
+      if (mesesJanela) { prev = janelaAnterior().posts; rotPrev = 'vs per. ant.'; }
+      const alc = sum(mesPosts.map((p) => p.alcance));
+      const med = medEng(mesPosts);
+      const mAcerto = maduros(mesPosts), pAcerto = maduros(prev); // taxa de acerto só sobre consolidados
+      const acerto = mAcerto.length ? (mAcerto.filter((p) => p.engaj >= 6).length / mAcerto.length) * 100 : 0;
+      const acertoPrev = pAcerto.length ? (pAcerto.filter((p) => p.engaj >= 6).length / pAcerto.length) * 100 : 0;
+      const deltaTxt = (cur, ant, tipo) => {
+        if (mesParcial) return 'mês em andamento';
+        if (!prev.length || (tipo === 'pct' && !ant)) return rotPrev + ': —';
+        const up = cur >= ant;
+        const val = tipo === 'pct' ? Math.abs(((cur - ant) / ant) * 100).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + '%'
+          : Math.abs(cur - ant).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' pp';
+        return rotPrev + ': <span class="' + (up ? 'up' : 'down') + '">' + (up ? '▲' : '▼') + ' ' + val + '</span>';
+      };
+      $('kpis').innerHTML =
+        '<div class="kpi"><div class="n">' + mesPosts.length + '</div><div class="l">' + F.nome + (isTudo ? ' no período' : ' no mês') + '</div><div class="d">' + deltaTxt(mesPosts.length, prev.length, 'pct') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + compact(alc) + '</div><div class="l">alcance total</div><div class="d">' + deltaTxt(alc, sum(prev.map((p) => p.alcance)), 'pct') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + pct1(med) + '</div><div class="l">engajamento mediano</div><div class="d">' + deltaTxt(med, medEng(prev), 'pp') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + compact(sum(mesPosts.map((p) => p.views))) + '</div><div class="l">visualizações</div><div class="d">' + deltaTxt(sum(mesPosts.map((p) => p.views)), sum(prev.map((p) => p.views)), 'pct') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + compact(sum(mesPosts.map((p) => p.shares))) + '</div><div class="l">compartilhamentos</div><div class="d">' + deltaTxt(sum(mesPosts.map((p) => p.shares)), sum(prev.map((p) => p.shares)), 'pct') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + compact(sum(mesPosts.map((p) => p.saves))) + '</div><div class="l">salvamentos</div><div class="d">' + deltaTxt(sum(mesPosts.map((p) => p.saves)), sum(prev.map((p) => p.saves)), 'pct') + '</div></div>' +
+        '<div class="kpi"><div class="n">' + pct1(acerto) + '</div><div class="l">taxa de acerto (engaj ≥ 6%)</div><div class="d">' + deltaTxt(acerto, acertoPrev, 'pp') + '</div></div>' +
+        (function segKpi() {
+          // seguidores ganhos pela seleção (métrica nº 1 da conta) — só quando há cobertura de follows
+          const comF = mesPosts.filter((p) => p.follows !== undefined);
+          if (!comF.length) return '';
+          const tot = sum(comF.map((p) => p.follows));
+          const alcF = sum(comF.map((p) => p.alcance));
+          const conv = alcF ? (tot / alcF * 1000) : 0;
+          const prevF = prev.filter((p) => p.follows !== undefined);
+          const cobertura = comF.length < mesPosts.length ? ' (' + comF.length + ' de ' + mesPosts.length + ' posts)' : '';
+          return '<div class="kpi"><div class="n">+' + fmt.format(tot) + '</div><div class="l">seguidores ganhos' + cobertura + '</div><div class="d">' +
+            (prevF.length ? deltaTxt(tot, sum(prevF.map((p) => p.follows)), 'pct') : 'conv.: <span style="color:var(--accent)">' + conv.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '/mil alcançados</span>') + '</div></div>' +
+            (prevF.length ? '<div class="kpi"><div class="n">' + conv.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '<span style="font-size:14px">/mil</span></div><div class="l">conversão de seguidores (por mil alcançados)</div><div class="d">&nbsp;</div></div>' : '');
+        })();
+    })();
+
+    /* legenda de cores */
+    if (state.formato === 'global') {
+      $('legend').innerHTML = ['carrossel', 'estatico', 'reel'].map((t) =>
+        '<span><i style="background:' + FORMATOS[t].cor + '"></i>' + FORMATOS[t].label + ' (' + mesPosts.filter((p) => p.tipo === t).length + ')</span>').join('');
+    } else {
+      const semArq = mesPosts.filter((p) => !p.arq || !ARQ[p.arq]).length;
+      $('legend').innerHTML = mesPosts.length > semArq ? Object.entries(ARQ).map(([nome, a]) => {
+        const n = mesPosts.filter((p) => p.arq === nome).length;
+        return n ? '<span><i style="background:' + a.cor + '"></i>' + nome + ' (' + n + ')</span>' : '';
+      }).join('') + (semArq ? '<span><i style="background:' + COR_SEM_ARQ + '"></i>sem classificação (' + semArq + ')</span>' : '') : '';
+    }
+
+    /* gráficos do mês */
+    barrasRanking('chart-bars', mesPosts);
+    dispersao('chart-scatter', mesPosts);
+
+    /* gráficos: mês em exibição × compilado do período (o pedido do Victor: cada mês
+       mostra o próprio raio-X; o compilado mês a mês vive nas visões de período) */
+    $('sec-graficos-mes').style.display = isTudo ? 'none' : '';
+    $('sec-graficos-periodo').style.display = isTudo ? '' : 'none';
+    const semPosts = postsDe(state.formato, null);
+    const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+    const FAIXAS = [['manhã', 6, 12], ['almoço', 12, 15], ['tarde', 15, 18], ['noite', 18, 24], ['madrugada', 0, 6]];
+    const serieDias = (grupo) => DIAS.map((d) => {
+      const g = grupo.filter((p) => p.dia === d);
+      return { chave: d, n: g.length, mediana: medEng(g) };
+    });
+    const serieFaixas = (grupo) => FAIXAS.map(([nome, a, b]) => {
+      const g = grupo.filter((p) => p.hora >= a && p.hora < b);
+      return { chave: nome, sub: a + '–' + b + 'h', n: g.length, mediana: medEng(g) };
+    });
+    const semanaObj = (w, g) => ({
+      label: w.slice(8, 10) + '/' + w.slice(5, 7),
+      labelFull: w.slice(8, 10) + '/' + w.slice(5, 7) + '/' + w.slice(2, 4),
+      n: g.length,
+      mediana: medEng(g),
+      alcance: sum(g.map((p) => p.alcance)),
+      destaque: false,
+    });
+    if (!isTudo) {
+      /* raio-X só do mês selecionado */
+      linhaTempoMes('mes-diario', mesPosts, F.linha, state.mes);
+      const semanasM = {};
+      semPosts.forEach((p) => { (semanasM[p.semana] = semanasM[p.semana] || []).push(p); });
+      // "só do mês": a semana de virada (segunda num mês, domingo no outro) conta APENAS os posts do mês em exibição
+      comboSemanal('mes-semanal', Object.keys(semanasM).sort()
+        .filter((w) => semanasM[w].some((p) => p.mes === state.mes))
+        .map((w) => semanaObj(w, semanasM[w].filter((p) => p.mes === state.mes))), F.linha);
+      barrasCategoria('mes-dia', serieDias(mesPosts), (d) => d.chave, (d) => d.n + ' posts', F.linha);
+      barrasCategoria('mes-hora', serieFaixas(mesPosts), (d) => d.chave, (d) => d.sub + ' · ' + d.n, F.linha);
+    } else {
+      /* compilado do período (na visão global, respeitando a janela selecionada) */
+      const perPosts = mesesJanela ? semPosts.filter((p) => mesesJanela.includes(p.mes)) : semPosts;
+      const mesesSel = mesesJanela || MESES;
+      const serieMes = mesesSel.map((m) => {
+        const g = perPosts.filter((p) => p.mes === m);
+        return { mes: m, n: g.length, mediana: medEng(g), alcance: sum(g.map((p) => p.alcance)), shares: sum(g.map((p) => p.shares)), parcial: m === DATA.atualizadoEm.slice(0, 7) };
+      });
+      comboMensal('comp-mensal', serieMes, F.linha);
+      barrasAlcance('comp-alcance', serieMes, F.linha);
+      const semanas = {};
+      perPosts.forEach((p) => { (semanas[p.semana] = semanas[p.semana] || []).push(p); });
+      // sem janela: semanas com posts do ano corrente (o arco longo fica no mês a mês); com janela: as semanas da janela.
+      // filtra pelos posts da semana, não pela segunda-feira que a abre — assim a semana de virada de ano (seg. em dez) não some.
+      const anoCorrente = DATA.atualizadoEm.slice(0, 4);
+      comboSemanal('comp-semanal', Object.keys(semanas).sort()
+        .filter((w) => mesesJanela ? true : semanas[w].some((p) => p.mes.slice(0, 4) === anoCorrente))
+        .map((w) => semanaObj(w, semanas[w])), F.linha);
+      /* arquétipos mês a mês (quando há classificação) */
+      if (perPosts.some((p) => p.arq && ARQ[p.arq])) {
+        $('card-arq-mes').style.display = '';
+        (function arqMes() {
+          const nomes = Object.keys(ARQ);
+          const W = 1000, H = 320, padL = 16, padB = 30, padT = 16, padR = 16;
+          const serie = mesesSel.map((m) => {
+            const g = perPosts.filter((p) => p.mes === m);
+            return {
+              mes: m, total: g.length,
+              por: nomes.map((nome) => { const gg = g.filter((p) => p.arq === nome); return { nome, n: gg.length, med: medEng(gg) }; }),
+              semArq: g.filter((p) => !p.arq || !ARQ[p.arq]).length,
+            };
+          });
+          const maxT = Math.max(...serie.map((x) => x.total), 1) * 1.12;
+          const bw = (W - padL - padR) / serie.length;
+          const alt = (n) => (H - padT - padB) * (n / maxT);
+          const comAno = serie.length > 8 || new Set(serie.map((m) => m.mes.slice(0, 4))).size > 1;
+          let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Arquétipos por mês">';
+          serie.forEach((m, i) => {
+            const x = padL + i * bw;
+            let yTopo = H - padB;
+            const seg = (n, cor, rotulo, med) => {
+              if (!n) return;
+              const h = alt(n);
+              yTopo -= h;
+              s += '<rect x="' + (x + bw * 0.18) + '" y="' + yTopo + '" width="' + (bw * 0.64) + '" height="' + h + '" fill="' + cor + '">' +
+                '<title>' + MES_NOME[m.mes.slice(5)] + '/' + m.mes.slice(2, 4) + ' · ' + rotulo + ': ' + n + ' posts' + (med ? '\nEngaj. mediano ' + pct1(med) : '') + '</title></rect>';
+            };
+            m.por.forEach((a) => seg(a.n, ARQ[a.nome].cor, a.nome, a.med));
+            seg(m.semArq, COR_SEM_ARQ, 'sem classificação', 0);
+            s += '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" fill="#5B6660">' + MES_NOME[m.mes.slice(5)] + (comAno ? '/' + m.mes.slice(2, 4) : '') + '</text>';
+          });
+          s += '</svg>';
+          $('comp-arq').innerHTML = s;
+        })();
+      } else { $('card-arq-mes').style.display = 'none'; }
+      barrasCategoria('comp-dia', serieDias(perPosts), (d) => d.chave, (d) => d.n + ' posts', F.linha);
+      barrasCategoria('comp-hora', serieFaixas(perPosts), (d) => d.chave, (d) => d.sub + ' · ' + d.n, F.linha);
+    }
+
+    /* arquétipos (quando a seleção tem classificação) */
+    const arqPosts = mesPosts.filter((p) => p.arq && ARQ[p.arq]);
+    if (arqPosts.length >= 5) {
+      $('sec-arquetipos').style.display = '';
+      $('arq-lede').textContent = 'Classificação por IA das legendas — ' + arqPosts.length + ' de ' + mesPosts.length +
+        ' posts da seleção classificados. Cada arquétipo tem uma função: cobrar alcance de quem entrega profundidade é o erro clássico.';
+      const rows = Object.keys(ARQ).map((nome) => {
+        const g = arqPosts.filter((p) => p.arq === nome);
+        const gm = maduros(g); // médias de taxa ignoram provisórios (engaj/share/save inflados neles)
+        return { nome, n: g.length, engaj: mean(gm.map((p) => p.engaj)), share: mean(gm.map((p) => p.shareRate)), save: mean(gm.map((p) => p.saveRate)), alc: mean(gm.map((p) => p.alcance)) };
+      }).filter((r) => r.n > 0).sort((a, b) => b.engaj - a.engaj);
+      $('arq-rows').innerHTML = rows.map((r, i) =>
+        '<tr' + (i === 0 ? ' class="best"' : '') + '><td><span class="dot" style="background:' + ARQ[r.nome].cor + '"></span>' + r.nome + '</td>' +
+        '<td class="num-col">' + r.n + '</td><td class="num-col">' + pct(r.engaj) + '</td>' +
+        '<td class="num-col">' + pct(r.share) + '</td><td class="num-col">' + pct(r.save) + '</td>' +
+        '<td class="num-col">' + fmt.format(Math.round(r.alc)) + '</td>' +
+        '<td style="color:var(--ink-2);font-size:13px">' + (ARQ[r.nome].funcao || '') + '</td></tr>').join('');
+    } else {
+      $('sec-arquetipos').style.display = 'none';
+    }
+
+    /* raio-X das legendas */
+    (function raiox() {
+      const mediana = (g, f) => median(g.map(f));
+      const linha = (rotulo, g) => !g.length ? '' :
+        '<tr><td>' + rotulo + '</td><td class="num-col">' + g.length + '</td>' +
+        '<td class="num-col">' + pct1(mediana(g, (p) => p.engaj)) + '</td>' +
+        '<td class="num-col">' + pct(mean(g.map((p) => p.shareRate))) + '</td>' +
+        '<td class="num-col">' + compact(Math.round(mediana(g, (p) => p.alcance))) + '</td></tr>';
+      const tabela = (titulo, hint, linhas) =>
+        '<div class="chart-card"><h3>' + titulo + '</h3><p class="hint">' + hint + '</p>' +
+        '<div style="overflow-x:auto"><table class="arq-table"><thead><tr><th>Grupo</th><th class="num-col">Posts</th>' +
+        '<th class="num-col">Engaj. mediano</th><th class="num-col">Share médio</th><th class="num-col">Alcance mediano</th></tr></thead>' +
+        '<tbody>' + linhas.join('') + '</tbody></table></div></div>';
+      const temCampos = mesPosts.some((p) => p.legTam !== undefined);
+      $('raiox').innerHTML = !temCampos || mesPosts.length < 8 ? '<p class="vazio">Amostra pequena demais nesta seleção.</p>' :
+        tabela('Chamada pra ação (CTA)', '"Comenta X", "salva", "me segue", oferta no texto…', [
+          linha('Com CTA', mesPosts.filter((p) => p.cta)),
+          linha('Sem CTA', mesPosts.filter((p) => !p.cta)),
+        ]) +
+        tabela('Pergunta na legenda', 'Legendas que perguntam algo ao leitor.', [
+          linha('Com pergunta', mesPosts.filter((p) => p.pergunta)),
+          linha('Sem pergunta', mesPosts.filter((p) => !p.pergunta)),
+        ]) +
+        tabela('Tamanho da legenda', 'Curta < 400 caracteres · média 400–900 · longa > 900.', [
+          linha('Curta', mesPosts.filter((p) => p.legTam < 400)),
+          linha('Média', mesPosts.filter((p) => p.legTam >= 400 && p.legTam <= 900)),
+          linha('Longa', mesPosts.filter((p) => p.legTam > 900)),
+        ]);
+    })();
+
+    /* a conversa — comentários como métrica + vozes da seleção (funciona em mês, período e janelas) */
+    (function conversa() {
+      if (!mesPosts.length) { $('conversa-corpo').innerHTML = '<p class="vazio">Sem posts nesta seleção.</p>'; return; }
+      const mad = maduros(mesPosts);
+      const totC = sum(mesPosts.map((p) => p.comentarios || 0));
+      const medC = median(mad.map((p) => p.comentarios || 0));
+      const comAlc = mad.filter((p) => p.alcance > 0);
+      const taxaConv = comAlc.length ? median(comAlc.map((p) => (p.comentarios || 0) / p.alcance * 100)) : 0;
+      const top = mesPosts.slice().sort((a, b) => (b.comentarios || 0) - (a.comentarios || 0)).slice(0, 6);
+      const kpis = '<div class="kpis" style="margin-top:0">' +
+        '<div class="kpi"><div class="n">' + compact(totC) + '</div><div class="l">comentários na seleção</div></div>' +
+        '<div class="kpi"><div class="n">' + fmt.format(Math.round(medC)) + '</div><div class="l">por post (mediana)</div></div>' +
+        '<div class="kpi"><div class="n">' + taxaConv.toFixed(2).replace('.', ',') + '%</div><div class="l">taxa de conversa (coment. ÷ alcance)</div></div>' +
+        '<div class="kpi"><div class="n">' + (top[0] && top[0].comentarios ? compact(top[0].comentarios) : '—') + '</div><div class="l">recorde da seleção (1 post)</div></div>' +
+        '</div>';
+      const linhas = top.map((p) => {
+        const vozes = (p.vozes || []).slice(0, 2).map((v) => '<div class="coment"><span>“' + esc(v.t) + '”</span>' + (v.likes ? '<span class="lk">♥ ' + fmt.format(v.likes) + '</span>' : '') + '</div>').join('');
+        const cap = esc(p.legenda.slice(0, 60)) + '…';
+        return '<tr><td style="font-weight:400;max-width:400px">' + (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') +
+          (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + cap + ' ↗</a>' : cap) + seloProv(p) +
+          (vozes ? '<div style="margin-top:6px">' + vozes + '</div>' : '') + '</td>' +
+          '<td style="white-space:nowrap">' + dataBR(p.ts) + '</td>' +
+          '<td class="num-col"><strong>' + fmt.format(p.comentarios || 0) + '</strong></td>' +
+          '<td class="num-col">' + (p.alcance ? ((p.comentarios || 0) / p.alcance * 100).toFixed(2).replace('.', ',') + '%' : '—') + '</td>' +
+          '<td class="num-col">' + fmt.format(p.alcance) + '</td></tr>';
+      }).join('');
+      $('conversa-corpo').innerHTML = kpis +
+        '<div class="table-scroll" style="margin-top:16px"><table class="arq-table"><thead><tr><th>Post e vozes do público</th><th>Data</th>' +
+        '<th class="num-col">Coment.</th><th class="num-col">Taxa de conversa</th><th class="num-col">Alcance</th></tr></thead><tbody>' + linhas + '</tbody></table></div>';
+    })();
+
+    /* leituras do período (IA — analises-periodo.json, renovadas semanalmente pelo atualizar) */
+    (function leiturasPeriodo() {
+      const A = DATA.analises;
+      const sec = $('sec-leituras-periodo');
+      let obj = null, titulo = '';
+      if (A && !isGlobal && A.formatos && A.formatos[state.formato]) {
+        obj = A.formatos[state.formato];
+        titulo = 'Leituras do período — ' + F.nome + ', ' + (obj.periodo || 'últimos meses');
+      } else if (A && isGlobal && A.global) {
+        // a IA gera leitura só pras janelas de 3 e 6 meses; nas janelas maiores (1 ano/tudo) mostra a de 6 meses, com aviso
+        obj = (state.periodo === 'm3' ? A.global.m3 : A.global.m6) || A.global.m6 || A.global.m3;
+        if (obj) titulo = 'Leituras do período — a conta inteira · ' + (obj.periodo || 'últimos meses');
+      }
+      if (!obj || !Array.isArray(obj.leituras) || !obj.leituras.length) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      $('leituras-periodo-h2').textContent = titulo;
+      const janelaCasaComGraficos = !isGlobal || state.periodo === 'm3' || state.periodo === 'm6';
+      $('leituras-periodo-lede').textContent = (isGlobal
+        ? 'A leitura de fundo da conta como um todo — mix de formatos, o que puxa alcance e o que converte seguidor. ' +
+          (janelaCasaComGraficos ? 'Cobre a janela selecionada acima.' : 'Baseada nos últimos 6 meses — as leituras de IA existem para as janelas de 3 e 6 meses (os gráficos acima seguem a janela que você escolheu).')
+        : 'O que os últimos meses de ' + F.nome + ' ensinam — vale para qualquer mês que você esteja olhando.') +
+        (A.geradoEm ? ' Análise do Claude gerada em ' + A.geradoEm + ' · renova todo dia, na primeira rodada do atualizar.' : '');
+      $('leituras-periodo-cards').innerHTML = obj.leituras.map((x, i) =>
+        '<div class="insight"><div class="num">' + (x.emoji || '📈') + ' Leitura ' + (i + 1) + '</div>' +
+        '<h3>' + esc(x.titulo || '') + '</h3><p>' + (x.texto || '') + '</p>' + carimboIA(A.geradoEm) + '</div>').join('');
+    })();
+
+    /* pautas — "o que produzir agora" (IA cruza performance + comentários + capas) */
+    (function pautas() {
+      const A = DATA.analises;
+      const sec = $('sec-pautas');
+      const lista = A && Array.isArray(A.pautas) ? A.pautas : [];
+      if (!lista.length) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      $('pautas-cards').innerHTML = lista.map((x) =>
+        '<div class="rec"><h3>' + (x.emoji || '🎠') + ' ' + esc(x.pauta || '') + '</h3>' +
+        (x.porque ? '<p><strong>Por quê:</strong> ' + x.porque + '</p>' : '') +
+        (x.como ? '<p><strong>Como:</strong> ' + x.como + '</p>' : '') +
+        ((x.formato || x.quando) ? '<p style="font-size:12.5px;color:var(--ink-2)">' + [x.formato, x.quando].filter(Boolean).map(esc).join(' · ') + '</p>' : '') +
+        carimboIA(A.geradoEm) + '</div>').join('');
+    })();
+
+    /* subnav: esconde os botões de seções vazias/ocultas na seleção atual */
+    document.querySelectorAll('#subnav button').forEach((b) => {
+      const el = document.getElementById(b.dataset.alvo);
+      const oculto = !el || (el.style && el.style.display === 'none');
+      b.style.display = oculto ? 'none' : '';
+    });
+
+    /* top 5 */
+    document.querySelectorAll('#ordem-pills .sort-pill').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ordem === ordem)));
+    const O = ORDENS[ordem];
+    const top5 = mesPosts.slice().sort((a, b) => O.val(b) - O.val(a)).slice(0, 5);
+    $('winners').innerHTML = top5.map((p, i) => {
+      const cor = corPost(p);
+      const chipTxt = curado() && p.arq ? p.arq : FORMATOS[p.tipo].label;
+      return '<article class="winner">' +
+        '<div class="rank"><div class="pct" style="color:' + cor + '">' + O.big(p) + '</div>' +
+        '<div class="rl">' + (ordem === 'engaj' ? '' : O.label.toLowerCase() + '<br>') + '#' + (i + 1) + ' · ' + dataBR(p.ts) + ' (' + p.dia + ')</div>' +
+        (p.thumb ? '<img class="thumb-md" src="' + p.thumb + '" alt="Capa do post">' : '') + '</div>' +
+        '<div><span class="chip" style="background:' + cor + '">' + chipTxt + '</span>' + seloProv(p) +
+        '<blockquote>“' + esc(p.legenda) + '…”</blockquote>' +
+        '<p class="meta"><b>' + pct(p.engaj) + '</b> engaj · <b>' + fmt.format(p.alcance) + '</b> alcance · <b>' + fmt.format(p.shares) + '</b> comp. (' + pct(p.shareRate) + ') · <b>' +
+        fmt.format(p.saves) + '</b> salv. · <b>' + fmt.format(p.curtidas) + '</b> curt.' +
+        (p.follows !== undefined ? ' · <b style="color:var(--accent)">+' + fmt.format(p.follows) + '</b> seguidores' : '') + '</p>' +
+        (curadoDetalhe && WHY[i] ? '<p class="why">' + WHY[i] + '</p>' : '') +
+        (p.link ? '<p style="margin:10px 0 0"><a href="' + p.link + '" target="_blank" rel="noopener">Ver no Instagram ↗</a></p>' : '') +
+        '</div></article>';
+    }).join('') || '<p class="vazio">Sem posts nesta seleção.</p>';
+
+    /* tabela completa */
+    const colExtra = state.formato === 'global' ? '<th>Formato</th>' : (curado() ? '<th>Arquétipo</th>' : '');
+    const temFollowsSel = mesPosts.some((p) => p.follows !== undefined);
+    $('full-table-holder').innerHTML =
+      '<table class="full-table"><thead><tr><th>#</th><th>Data</th>' + colExtra + '<th>Legenda</th>' +
+      '<th class="num-col">Alcance</th><th class="num-col">Views</th><th class="num-col">Curt.</th><th class="num-col">Com.</th>' +
+      '<th class="num-col">Salv.</th><th class="num-col">Comp.</th><th class="num-col">Engaj.</th><th class="num-col">Share%</th><th class="num-col">Save%</th>' +
+      (temFollowsSel ? '<th class="num-col">Novos seg.</th><th class="num-col">Conv./mil</th>' : '') + '</tr></thead><tbody>' +
+      mesPosts.map((p, i) => {
+        const cap = esc(p.legenda.slice(0, 84)) + (p.legenda.length > 84 ? '…' : '');
+        const extra = state.formato === 'global'
+          ? '<td style="white-space:nowrap"><span class="dot" style="background:' + FORMATOS[p.tipo].cor + ';width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:6px"></span>' + FORMATOS[p.tipo].label + '</td>'
+          : (curado() ? '<td style="white-space:nowrap"><span class="dot" style="background:' + (p.arq ? ARQ[p.arq].cor : '#ccc') + ';width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:6px"></span>' + (p.arq || '—') + '</td>' : '');
+        const colsF = temFollowsSel
+          ? '<td class="num-col">' + (p.follows !== undefined ? '<strong style="color:var(--accent)">+' + fmt.format(p.follows) + '</strong>' : '—') + '</td>' +
+            '<td class="num-col">' + (p.follows !== undefined && p.alcance ? (p.follows / p.alcance * 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) : '—') + '</td>'
+          : '';
+        return '<tr><td>' + (i + 1) + '</td><td style="white-space:nowrap">' + dataBR(p.ts) + ' ' + p.dia + ' ' + p.ts.slice(11) + '</td>' + extra +
+          '<td class="cap">' + (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') + (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener">' + cap + ' ↗</a>' : cap) + '</td>' +
+          '<td class="num-col">' + fmt.format(p.alcance) + '</td><td class="num-col">' + fmt.format(p.views) + '</td>' +
+          '<td class="num-col">' + fmt.format(p.curtidas) + '</td><td class="num-col">' + fmt.format(p.comentarios) + '</td>' +
+          '<td class="num-col">' + fmt.format(p.saves) + '</td><td class="num-col">' + fmt.format(p.shares) + '</td>' +
+          '<td class="num-col"><strong>' + pct(p.engaj) + '</strong></td>' +
+          '<td class="num-col">' + pct(p.shareRate) + '</td><td class="num-col">' + pct(p.saveRate) + '</td>' + colsF + '</tr>';
+      }).join('') + '</tbody></table>';
+
+    /* seções curadas */
+    document.querySelectorAll('.curated').forEach((el) => { el.style.display = curado() ? '' : 'none'; });
+    $('verdict-curado').style.display = curado() ? '' : 'none';
+  }
+
+  /* ---------- zoom de gráficos ---------- */
+  (function zoomGraficos() {
+    const fundo = $('zoom-fundo'), caixa = $('zoom-caixa'), conteudo = $('zoom-conteudo');
+    const abrir = (card) => {
+      const clone = card.cloneNode(true);
+      clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+      clone.querySelectorAll('.zoom-btn').forEach((el) => el.remove());
+      clone.style.marginTop = '0';
+      clone.style.border = 'none';
+      clone.style.padding = '0';
+      conteudo.innerHTML = '';
+      conteudo.appendChild(clone);
+      document.body.classList.add('zoom-aberto');
+    };
+    const fechar = () => document.body.classList.remove('zoom-aberto');
+    document.querySelectorAll('.chart-card').forEach((card) => {
+      const b = document.createElement('button');
+      b.className = 'zoom-btn';
+      b.textContent = '⤢';
+      b.title = 'Expandir gráfico';
+      b.setAttribute('aria-label', 'Expandir gráfico');
+      b.addEventListener('click', () => abrir(card));
+      card.appendChild(b);
+    });
+    fundo.addEventListener('click', fechar);
+    caixa.addEventListener('click', (e) => { if (e.target === caixa) fechar(); });
+    $('zoom-fechar').addEventListener('click', fechar);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(); });
+  })();
+
+  /* ---------- tela Hoje ---------- */
+  function renderHoje() {
+    const refDia = DATA.atualizadoEm.slice(0, 10);
+    const corte = new Date(new Date(refDia + 'T00:00:00Z').getTime() - 2 * 86400000).toISOString().slice(0, 10);
+    const recentes = DATA.posts.filter((p) => p.ts.slice(0, 10) >= corte).sort((a, b) => b.alcance - a.alcance);
+    const medAlc = {};
+    ['carrossel', 'estatico', 'reel'].forEach((t) => { medAlc[t] = median(maduros(DATA.posts.filter((p) => p.tipo === t)).map((p) => p.alcance)); });
+    const quente = (p) => medAlc[p.tipo] > 0 && p.alcance >= 2 * medAlc[p.tipo];
+    const seg = DATA.seguidores || [];
+    const postsPorDia = {};
+    DATA.posts.forEach((p) => { const d0 = p.ts.slice(0, 10); (postsPorDia[d0] = postsPorDia[d0] || []).push(p); });
+    const ontem = seg.length ? seg[seg.length - 1] : null;
+    // rótulo honesto: só chama de "ontem" se o último dia consolidado for de fato ontem
+    const ontemEsperado = new Date(new Date(DATA.atualizadoEm.slice(0, 10) + 'T00:00:00Z').getTime() - 86400000).toISOString().slice(0, 10);
+    const rotuloUltimoDia = ontem ? (ontem.date === ontemEsperado ? 'ontem' : 'em ' + ontem.date.slice(8, 10) + '/' + ontem.date.slice(5, 7)) : '';
+    const anteontem = seg.length > 1 ? seg[seg.length - 2] : null;
+    const seg7 = seg.slice(-7).reduce((x, s) => x + s.novos, 0);
+    const seg30 = seg.reduce((x, s) => x + s.novos, 0);
+    const alc3 = sum(recentes.map((p) => p.alcance));
+    const destaque = recentes[0];
+
+    $('hoje-verdict').innerHTML =
+      (ontem ? 'Entraram <strong>' + fmt.format(ontem.novos) + ' seguidores novos</strong> ' + rotuloUltimoDia + ' (último dia consolidado pela API)' + (DATA.totalSeguidores ? ' — total agora: <strong>' + fmt.format(DATA.totalSeguidores) + '</strong>' : '') + '. ' : '') +
+      'Nos últimos 3 dias você publicou <strong>' + recentes.length + ' posts</strong>, somando <strong>' + compact(alc3) + '</strong> de alcance.' +
+      (destaque ? ' O destaque é ' + (quente(destaque) ? '🔥 ' : '') + '“' + esc(destaque.legenda.slice(0, 60)) + '…”, com <strong>' + compact(destaque.alcance) + '</strong> de alcance.' : '');
+
+    const dSeg = (ontem && anteontem)
+      ? 'vs anteontem: <span class="' + (ontem.novos >= anteontem.novos ? 'up' : 'down') + '">' + (ontem.novos >= anteontem.novos ? '▲' : '▼') + ' ' + Math.abs(ontem.novos - anteontem.novos) + '</span>'
+      : '&nbsp;';
+    $('hoje-kpis').innerHTML =
+      '<div class="kpi"><div class="n">' + (DATA.totalSeguidores ? compact(DATA.totalSeguidores) : '—') + '</div><div class="l">seguidores agora</div><div class="d">' + (function () {
+        const s = DATA.snapshots || [];
+        if (s.length < 2) return 'tempo real a cada atualização';
+        const ult = s[s.length - 1];
+        const baseOntem = [...s].reverse().find((x) => x.em.slice(0, 10) < ult.em.slice(0, 10));
+        const base = baseOntem || s[s.length - 2];
+        const d = ult.total - base.total;
+        return '<span class="' + (d >= 0 ? 'up' : 'down') + '">' + (d >= 0 ? '+' : '') + fmt.format(d) + '</span> ' +
+          (baseOntem ? 'hoje, ao vivo' : 'desde a última rodada') + ' (base: ' + base.em.slice(8, 10) + '/' + base.em.slice(5, 7) + ' ' + base.em.slice(11) + ')';
+      })() + '</div></div>' +
+      '<div class="kpi"><div class="n">+' + (ontem ? fmt.format(ontem.novos) : '—') + '</div><div class="l">seguidores ' + (rotuloUltimoDia || 'ontem') + '</div><div class="d">' + dSeg + '</div></div>' +
+      '<div class="kpi"><div class="n">+' + fmt.format(seg7) + '</div><div class="l">últimos 7 dias</div><div class="d">média ' + Math.round(seg7 / 7) + '/dia</div></div>' +
+      '<div class="kpi"><div class="n">+' + fmt.format(seg30) + '</div><div class="l">últimos ' + seg.length + ' dias</div><div class="d">média ' + Math.round(seg30 / Math.max(1, seg.length)) + '/dia</div></div>' +
+      '<div class="kpi"><div class="n">' + recentes.length + '</div><div class="l">posts últimos 3 dias</div><div class="d">' + (recentes.filter(quente).length ? recentes.filter(quente).length + ' em aceleração 🔥' : '&nbsp;') + '</div></div>' +
+      '<div class="kpi"><div class="n">' + compact(alc3) + '</div><div class="l">alcance últimos 3 dias</div><div class="d">&nbsp;</div></div>' +
+      (function cadKpi() {
+        // cadência: irregularidade custa alcance — o diário vive cobrando; agora tem medidor fixo
+        const corte14 = new Date(new Date(refDia + 'T00:00:00Z').getTime() - 13 * 86400000).toISOString().slice(0, 10);
+        const dias = new Set(DATA.posts.filter((p) => p.ts.slice(0, 10) >= corte14).map((p) => p.ts.slice(0, 10))).size;
+        const ultimo = DATA.posts.length ? DATA.posts[DATA.posts.length - 1].ts.slice(0, 10) : null;
+        const gap = ultimo ? Math.max(0, Math.round((new Date(refDia) - new Date(ultimo)) / 86400000)) : null;
+        return '<div class="kpi"><div class="n">' + dias + '<span style="font-size:14px">/14</span></div><div class="l">dias com post (2 semanas)</div><div class="d">' +
+          (gap === 0 ? '<span class="up">postou hoje ✓</span>' : gap === 1 ? 'último post: ontem' : '<span class="' + (gap >= 3 ? 'down' : '') + '">sem postar há ' + gap + ' dias</span>') + '</div></div>';
+      })();
+
+    /* leituras do dia */
+    const ins = DATA.insightsHoje;
+    if (ins && ins.insights && ins.insights.length) {
+      const velho = ins.geradoEm && ins.geradoEm.slice(0, 10) !== DATA.atualizadoEm.slice(0, 10);
+      $('insights-lede').textContent = 'Análise do Claude sobre o momento da conta, gerada em ' + ins.geradoEm +
+        (velho ? ' — anterior aos dados atuais; rode o atualizar.command para regenerar.' : '.');
+      $('hoje-insights').innerHTML = ins.insights.map((x, i) =>
+        '<div class="insight"><div class="num">' + (x.emoji || '💡') + ' Leitura ' + (i + 1) + '</div>' +
+        '<h3>' + esc(x.titulo || '') + '</h3><p>' + (x.texto || '') + '</p>' + carimboIA(ins.geradoEm) + '</div>').join('');
+    } else {
+      $('hoje-insights').innerHTML = '<div class="insight"><div class="num">💡</div><h3>Sem leituras ainda</h3>' +
+        '<p>Rode o <strong>atualizar.command</strong> — com o Claude Code instalado, as leituras do dia são geradas automaticamente a cada atualização.</p></div>';
+    }
+
+    /* ações de hoje (sugestões executáveis, com link do post) */
+    const acoes = (ins && ins.acoes) || [];
+    $('hoje-acoes').innerHTML = acoes.map((a) => {
+      const p = a.link ? DATA.posts.find((x) => x.link === a.link) : null;
+      return '<div class="rec" style="display:flex;gap:14px;align-items:flex-start">' +
+        (p && p.thumb ? '<img class="thumb-md" src="' + p.thumb + '" alt="Capa do post" style="margin-top:2px">' : '') +
+        '<div><h3 style="margin-bottom:6px">✅ ' + esc(a.acao || '') + '</h3>' +
+        (a.quando ? '<p><strong>Quando:</strong> ' + esc(a.quando) + '</p>' : '') +
+        ((a.link || p) ? '<p style="margin-top:8px"><a href="' + (a.link || p.link) + '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;text-decoration:none">Abrir o post ↗</a></p>' : '') +
+        '</div></div>';
+    }).join('');
+
+    $('hoje-destaque').innerHTML = destaque ? (function (p) {
+      const cor = FORMATOS[p.tipo].cor;
+      return '<article class="winner">' +
+        '<div class="rank"><div class="pct" style="color:' + cor + '">' + compact(p.alcance) + '</div><div class="rl">alcance<br>' + p.ts.slice(8, 10) + '/' + p.ts.slice(5, 7) + ' (' + p.dia + ') ' + p.ts.slice(11) + '</div>' +
+        (p.thumb ? '<img class="thumb-md" src="' + p.thumb + '" alt="Capa do post">' : '') + '</div>' +
+        '<div><span class="chip" style="background:' + cor + '">' + (quente(p) ? '🔥 em aceleração · ' : 'destaque do momento · ') + FORMATOS[p.tipo].label + '</span>' + seloProv(p) +
+        '<blockquote>“' + esc(p.legenda) + '…”</blockquote>' +
+        '<p class="meta"><b>' + pct(p.engaj) + '</b> engaj · <b>' + fmt.format(p.views) + '</b> views · <b>' + fmt.format(p.curtidas) + '</b> curt. · <b>' + fmt.format(p.shares) + '</b> comp. · <b>' + fmt.format(p.saves) + '</b> salv.</p>' +
+        (quente(p) ? '<p class="fogo-nota">Alcance já em ' + (p.alcance / medAlc[p.tipo]).toFixed(1) + '× a mediana dos ' + FORMATOS[p.tipo].nome + ' — vale impulsionar ou preparar a sequência.</p>' : '') +
+        (p.trajetoria && p.trajetoria.length >= 2 ? '<p class="fogo-nota">📈 Trajetória de alcance: <strong>' + p.trajetoria.map((t) => compact(t.a)).join(' → ') + '</strong> (uma medição por atualização diária)' +
+          (p.trajetoria[p.trajetoria.length - 1].f !== undefined && p.trajetoria[0].f !== undefined ? ' · seguidores ganhos: +' + fmt.format(p.trajetoria[0].f) + ' → +' + fmt.format(p.trajetoria[p.trajetoria.length - 1].f) : '') + '</p>' : '') +
+        (p.link ? '<p style="margin:10px 0 0"><a href="' + p.link + '" target="_blank" rel="noopener">Ver no Instagram ↗</a></p>' : '') +
+        '</div></article>';
+    })(destaque) : '<p class="vazio">Nenhum post nos últimos 3 dias.</p>';
+
+    const temFollows = recentes.some((p) => p.follows !== undefined);
+    $('hoje-lista').innerHTML = recentes.length ? '<table class="arq-table"><thead><tr><th>Post</th><th>Quando</th><th>Formato</th>' +
+      '<th class="num-col">Alcance</th><th class="num-col">Views</th><th class="num-col">Engaj.</th><th class="num-col">Comp.</th>' +
+      (temFollows ? '<th class="num-col">Novos seg.</th>' : '') + '<th class="num-col">Curt.</th></tr></thead><tbody>' +
+      recentes.map((p) => '<tr><td style="font-weight:400;max-width:340px">' + (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') + (quente(p) ? '🔥 ' : '') +
+        (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + esc(p.legenda.slice(0, 70)) + '… ↗</a>' : esc(p.legenda.slice(0, 70)) + '…') + '</td>' +
+        '<td style="white-space:nowrap">' + p.ts.slice(8, 10) + '/' + p.ts.slice(5, 7) + ' ' + p.ts.slice(11) + '</td>' +
+        '<td style="white-space:nowrap"><span class="dot" style="background:' + FORMATOS[p.tipo].cor + '"></span>' + FORMATOS[p.tipo].label + '</td>' +
+        '<td class="num-col"><strong>' + fmt.format(p.alcance) + '</strong></td>' +
+        '<td class="num-col">' + fmt.format(p.views) + '</td>' +
+        '<td class="num-col">' + pct(p.engaj) + (p.provisorio ? ' <span class="prov" title="< 72h — engajamento provisório, alcance ainda subindo">⏳</span>' : '') + '</td>' +
+        '<td class="num-col">' + fmt.format(p.shares) + '</td>' +
+        (temFollows ? '<td class="num-col">' + (p.follows !== undefined ? '<strong style="color:var(--accent)">+' + fmt.format(p.follows) + '</strong>' : '—') + '</td>' : '') +
+        '<td class="num-col">' + fmt.format(p.curtidas) + '</td></tr>').join('') + '</tbody></table>' : '<p class="vazio">Nenhum post nos últimos 3 dias.</p>';
+
+    (function segChart() {
+      if (!seg.length) { $('hoje-chart-seg').innerHTML = '<p class="vazio">Sem dados de seguidores.</p>'; return; }
+      const W = 1000, H = 280, padL = 44, padB = 30, padT = 20, padR = 10;
+      const maxV = Math.max(...seg.map((d) => d.novos)) * 1.15;
+      const step = Math.max(50, Math.ceil(maxV / 4 / 50) * 50);
+      const bw = (W - padL - padR) / seg.length;
+      const y = (v) => padT + (H - padT - padB) * (1 - v / maxV);
+      let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Novos seguidores por dia">';
+      for (let g = 0; g <= maxV; g += step) {
+        s += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="#EEECE7"/>';
+        s += '<text x="' + (padL - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end" font-size="11" fill="#5B6660">' + g + '</text>';
+      }
+      seg.forEach((d, i) => {
+        const x = padL + i * bw;
+        const ultimo = i === seg.length - 1;
+        const noAr = (postsPorDia[d.date] || []).slice().sort((a, b) => b.alcance - a.alcance).slice(0, 2);
+        s += '<rect x="' + (x + bw * 0.18) + '" y="' + y(d.novos) + '" width="' + (bw * 0.64) + '" height="' + (H - padB - y(d.novos)) + '" rx="2" fill="' + (ultimo ? '#157A46' : '#CBE3D4') + '">' +
+          '<title>' + d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + ': +' + fmt.format(d.novos) + ' seguidores' +
+          (noAr.length ? '\nPublicado no dia: ' + noAr.map((p) => '“' + esc(p.legenda.slice(0, 38)) + '…” (' + compact(p.alcance) + ')').join(' · ') : '\nNada publicado nesse dia') + '</title></rect>';
+        s += '<text' + (i % 4 === 0 || ultimo ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="10.5" fill="#5B6660">' + d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + '</text>';
+        s += '<text' + (ultimo ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (y(d.novos) - 8) + '" text-anchor="middle" font-size="' + (ultimo ? '12' : '10.5') + '" font-weight="600" fill="' + (ultimo ? '#157A46' : '#5B6660') + '">+' + d.novos + '</text>';
+      });
+      s += '</svg>';
+      $('hoje-chart-seg').innerHTML = s;
+    })();
+
+    /* seguidores ↔ conteúdo: os dias que mais trouxeram gente */
+    const topDias = seg.slice().sort((a, b) => b.novos - a.novos).slice(0, 5);
+    $('hoje-seg-dias').innerHTML = topDias.length ? '<div class="chart-card" style="margin-top:0"><h3>Os dias que mais trouxeram seguidores</h3>' +
+      '<p class="hint">Atribuição aproximada: o que estava no ar (posts do dia e da véspera, por alcance). Viral de dias anteriores também influencia.</p>' +
+      '<div style="overflow-x:auto"><table class="arq-table"><thead><tr><th>Dia</th><th class="num-col">Novos seguidores</th><th>O que estava no ar</th></tr></thead><tbody>' +
+      topDias.map((d) => {
+        const vespera = new Date(new Date(d.date + 'T00:00:00Z').getTime() - 86400000).toISOString().slice(0, 10);
+        const noAr = [...(postsPorDia[d.date] || []), ...(postsPorDia[vespera] || [])].sort((a, b) => b.alcance - a.alcance).slice(0, 2);
+        return '<tr><td style="white-space:nowrap">' + d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + '</td>' +
+          '<td class="num-col"><strong>+' + fmt.format(d.novos) + '</strong></td>' +
+          '<td style="font-weight:400">' + (noAr.length
+            ? noAr.map((p) => (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') + '“' + esc(p.legenda.slice(0, 55)) + '…” <span style="color:var(--ink-2)">(' + compact(p.alcance) + ' alc · ' + FORMATOS[p.tipo].label.toLowerCase() + ')</span>').join('<br>')
+            : '<span style="color:var(--ink-2)">nada publicado na janela</span>') + '</td></tr>';
+      }).join('') + '</tbody></table></div></div>' : '';
+
+    /* O que estão comentando — comentários mais curtidos nos posts com conversa quente agora */
+    (function comentando() {
+      const cr = DATA.comentariosRecentes || [];
+      const sec = $('hoje-comentarios-sec');
+      if (!cr.length) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      $('hoje-comentarios').innerHTML = cr.slice(0, 5).map((p) => {
+        const cap = esc((p.legenda || '').slice(0, 54)) + '…';
+        return '<div class="coment-post">' +
+          '<div>' + (p.thumb ? '<img class="coment-thumb" src="' + p.thumb + '" alt="">' : '') + '</div>' +
+          '<div><div class="cabeca">' +
+          (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener">“' + cap + '”</a>' : '“' + cap + '”') +
+          ' · <strong>' + fmt.format(p.comentariosRecentes) + '</strong> comentário' + (p.comentariosRecentes === 1 ? '' : 's') + ' novo' + (p.comentariosRecentes === 1 ? '' : 's') +
+          (p.alcance != null ? ' · ' + compact(p.alcance) + ' de alcance' : '') + '</div>' +
+          (p.comentarios || []).map((c) => '<div class="coment"><span>“' + esc(c.t) + '”</span>' +
+            (c.likes ? '<span class="lk">♥ ' + fmt.format(c.likes) + '</span>' : '') + '</div>').join('') +
+          '</div></div>';
+      }).join('');
+    })();
+  }
+
+  /* ---------- tela Semana: leitura macro dos últimos 7 dias ---------- */
+  function renderSemana() {
+    const refDia = DATA.atualizadoEm.slice(0, 10);
+    const diaISO = (off) => new Date(new Date(refDia + 'T00:00:00Z').getTime() - off * 86400000).toISOString().slice(0, 10);
+    const ini7 = diaISO(6), iniPrev = diaISO(13), fimPrev = diaISO(7);
+    const ps = DATA.posts.filter((p) => p.ts.slice(0, 10) >= ini7);
+    const psPrev = DATA.posts.filter((p) => { const d = p.ts.slice(0, 10); return d >= iniPrev && d <= fimPrev; });
+    const det = DATA.seguidoresDetalhe || [];
+    const det7 = det.filter((d) => d.date >= ini7);
+    const detPrev = det.filter((d) => d.date >= iniPrev && d.date <= fimPrev);
+    const postsPorDia = {};
+    DATA.posts.forEach((p) => { const d0 = p.ts.slice(0, 10); (postsPorDia[d0] = postsPorDia[d0] || []).push(p); });
+
+    /* veredito */
+    const alcS = sum(ps.map((p) => p.alcance));
+    const medS = medEng(ps);
+    const ganhos7 = sum(det7.map((d) => d.ganhos)), perdidos7 = sum(det7.map((d) => d.perdidos));
+    const piorDia = det7.slice().sort((a, b) => b.perdidos - a.perdidos)[0];
+    const melhorPost = ps.slice().sort((a, b) => b.alcance - a.alcance)[0];
+    $('semana-verdict').innerHTML = ps.length
+      ? 'Nos últimos 7 dias: <strong>' + ps.length + ' posts</strong>, <strong>' + compact(alcS) + '</strong> de alcance e engajamento mediano de <strong>' + pct1(medS) + '</strong>.' +
+        (det7.length ? ' A base ganhou <strong>' + fmt.format(ganhos7) + '</strong> e perdeu <strong>' + fmt.format(perdidos7) + '</strong> seguidores (saldo <strong>' + (ganhos7 - perdidos7 >= 0 ? '+' : '') + fmt.format(ganhos7 - perdidos7) + '</strong>).' : '') +
+        (melhorPost ? ' O maior post da semana foi “' + esc(melhorPost.legenda.slice(0, 55)) + '…” (<strong>' + compact(melhorPost.alcance) + '</strong>).' : '')
+      : 'Nenhum post nos últimos 7 dias.';
+
+    /* KPIs com comparativo vs semana anterior */
+    const dW = (cur, ant, tipo) => {
+      if (!psPrev.length && !detPrev.length) return 'vs sem. ant.: —';
+      if (tipo === 'pct' && !ant) return 'vs sem. ant.: —';
+      const up = cur >= ant;
+      const val = tipo === 'pct' ? Math.abs(((cur - ant) / ant) * 100).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + '%'
+        : Math.abs(cur - ant).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + (tipo === 'pp' ? ' pp' : '');
+      return 'vs sem. ant.: <span class="' + (up ? 'up' : 'down') + '">' + (up ? '▲' : '▼') + ' ' + val + '</span>';
+    };
+    const dInv = (cur, ant) => { // pra perdidos: menos = melhor (verde quando cai)
+      if (!detPrev.length || !ant) return 'vs sem. ant.: —';
+      const caiu = cur <= ant;
+      return 'vs sem. ant.: <span class="' + (caiu ? 'up' : 'down') + '">' + (caiu ? '▼' : '▲') + ' ' + Math.abs(((cur - ant) / ant) * 100).toLocaleString('pt-BR', { maximumFractionDigits: 0 }) + '%</span>';
+    };
+    const comF = ps.filter((p) => p.follows !== undefined);
+    const followsS = sum(comF.map((p) => p.follows));
+    const convS = comF.length && sum(comF.map((p) => p.alcance)) ? followsS / sum(comF.map((p) => p.alcance)) * 1000 : null;
+    const ganhosPrev = sum(detPrev.map((d) => d.ganhos)), perdidosPrev = sum(detPrev.map((d) => d.perdidos));
+    $('semana-kpis').innerHTML =
+      '<div class="kpi"><div class="n">' + ps.length + '</div><div class="l">posts na semana</div><div class="d">' + dW(ps.length, psPrev.length, 'pct') + '</div></div>' +
+      '<div class="kpi"><div class="n">' + compact(alcS) + '</div><div class="l">alcance</div><div class="d">' + dW(alcS, sum(psPrev.map((p) => p.alcance)), 'pct') + '</div></div>' +
+      '<div class="kpi"><div class="n">' + pct1(medS) + '</div><div class="l">engaj. mediano (consolidados)</div><div class="d">' + dW(medS, medEng(psPrev), 'pp') + '</div></div>' +
+      (det7.length
+        ? '<div class="kpi"><div class="n">+' + fmt.format(ganhos7) + '</div><div class="l">seguidores ganhos</div><div class="d">' + dW(ganhos7, ganhosPrev, 'pct') + '</div></div>' +
+          '<div class="kpi"><div class="n" style="color:var(--down)">−' + fmt.format(perdidos7) + '</div><div class="l">seguidores perdidos</div><div class="d">' + dInv(perdidos7, perdidosPrev) + '</div></div>' +
+          '<div class="kpi"><div class="n">' + (ganhos7 - perdidos7 >= 0 ? '+' : '') + fmt.format(ganhos7 - perdidos7) + '</div><div class="l">saldo da semana</div><div class="d">' + (perdidos7 && ganhos7 ? 'perde ' + Math.round(perdidos7 / ganhos7 * 100) + '% do que ganha' : '&nbsp;') + '</div></div>'
+        : '') +
+      (comF.length ? '<div class="kpi"><div class="n">+' + fmt.format(followsS) + '</div><div class="l">seguidores vindos de posts' + (comF.length < ps.length ? ' (' + comF.length + ' de ' + ps.length + ')' : '') + '</div><div class="d">' + (convS != null ? 'conv.: ' + convS.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '/mil alcançados' : '&nbsp;') + '</div></div>' : '');
+
+    /* gráfico ganhos × perdidos (últimos 14 dias) */
+    (function grafico() {
+      const serie = det.slice(-14);
+      if (!serie.length) { $('semana-seg-chart').innerHTML = '<p class="vazio">Sem série de ganhos/perdidos ainda — ela nasce das próximas atualizações.</p>'; return; }
+      const W = 1000, H = 320, padL = 48, padB = 30, padT = 16, padR = 10;
+      const maxG = Math.max(...serie.map((d) => d.ganhos), 1);
+      const maxP = Math.max(...serie.map((d) => d.perdidos), 1);
+      const y0 = padT + (H - padT - padB) * (maxG / (maxG + maxP));
+      const yG = (v) => y0 - (y0 - padT) * (v / maxG);
+      const yP = (v) => y0 + (H - padB - y0) * (v / maxP);
+      const bw = (W - padL - padR) / serie.length;
+      let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Seguidores ganhos e perdidos por dia">';
+      s += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y0 + '" y2="' + y0 + '" stroke="#17211B" stroke-width="1"/>';
+      s += '<text x="' + (padL - 8) + '" y="' + (padT + 10) + '" text-anchor="end" font-size="10.5" fill="#157A46">+' + compact(maxG) + '</text>';
+      s += '<text x="' + (padL - 8) + '" y="' + (H - padB) + '" text-anchor="end" font-size="10.5" fill="#C2503F">−' + compact(maxP) + '</text>';
+      serie.forEach((d, i) => {
+        const x = padL + i * bw;
+        const noAr = (postsPorDia[d.date] || []).slice().sort((a, b) => b.alcance - a.alcance).slice(0, 2);
+        const tip = d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + ': +' + fmt.format(d.ganhos) + ' ganhos · −' + fmt.format(d.perdidos) + ' perdidos · saldo ' + (d.saldo >= 0 ? '+' : '') + fmt.format(d.saldo) +
+          (d.fonte === 'estimado' ? ' (estimado)' : '') +
+          (noAr.length ? '\nNo ar: ' + noAr.map((p) => '“' + esc(p.legenda.slice(0, 38)) + '…” (' + compact(p.alcance) + ')').join(' · ') : '\nNada publicado nesse dia');
+        s += '<rect x="' + (x + bw * 0.18) + '" y="' + yG(d.ganhos) + '" width="' + (bw * 0.64) + '" height="' + Math.max(1, y0 - yG(d.ganhos)) + '" rx="2" fill="#157A46" opacity="' + (d.fonte === 'estimado' ? 0.45 : 0.85) + '"><title>' + tip + '</title></rect>';
+        s += '<rect x="' + (x + bw * 0.18) + '" y="' + y0 + '" width="' + (bw * 0.64) + '" height="' + Math.max(1, yP(d.perdidos) - y0) + '" rx="2" fill="#C2503F" opacity="' + (d.fonte === 'estimado' ? 0.45 : 0.8) + '"><title>' + tip + '</title></rect>';
+        s += '<text' + (i % 2 === 0 || i === serie.length - 1 ? '' : ' class="lbl-extra"') + ' x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10.5" fill="#5B6660">' + d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + (d.fonte === 'estimado' ? '~' : '') + '</text>';
+        s += '<text class="lbl-extra" x="' + (x + bw / 2) + '" y="' + (yG(d.ganhos) - 5) + '" text-anchor="middle" font-size="10" font-weight="600" fill="#157A46">+' + d.ganhos + '</text>';
+        s += '<text class="lbl-extra" x="' + (x + bw / 2) + '" y="' + (yP(d.perdidos) + 12) + '" text-anchor="middle" font-size="10" font-weight="600" fill="#C2503F">−' + d.perdidos + '</text>';
+      });
+      s += '</svg>';
+      $('semana-seg-chart').innerHTML = s;
+    })();
+
+    /* dias que mais perderam seguidores — cruzados com o que estava no ar */
+    (function perdidos() {
+      const top = det.slice(-14).filter((d) => d.perdidos > 0).sort((a, b) => b.perdidos - a.perdidos).slice(0, 4);
+      $('semana-perdidos').innerHTML = top.length ? '<div class="chart-card" style="margin-top:0"><h3>Os dias que mais perderam seguidores</h3>' +
+        '<p class="hint">Cruzamento com o conteúdo no ar no dia e na véspera — pauta polêmica e rajada fora do tema costumam aparecer aqui. Correlação, não causa provada.</p>' +
+        '<div style="overflow-x:auto"><table class="arq-table"><thead><tr><th>Dia</th><th class="num-col">Perdidos</th><th class="num-col">Ganhos</th><th>O que estava no ar</th></tr></thead><tbody>' +
+        top.map((d) => {
+          const vespera = new Date(new Date(d.date + 'T00:00:00Z').getTime() - 86400000).toISOString().slice(0, 10);
+          const noAr = [...(postsPorDia[d.date] || []), ...(postsPorDia[vespera] || [])].sort((a, b) => b.alcance - a.alcance).slice(0, 2);
+          return '<tr><td style="white-space:nowrap">' + d.date.slice(8, 10) + '/' + d.date.slice(5, 7) + (d.fonte === 'estimado' ? ' ~' : '') + '</td>' +
+            '<td class="num-col"><strong style="color:var(--down)">−' + fmt.format(d.perdidos) + '</strong></td>' +
+            '<td class="num-col">+' + fmt.format(d.ganhos) + '</td>' +
+            '<td style="font-weight:400">' + (noAr.length
+              ? noAr.map((p) => (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') + '“' + esc(p.legenda.slice(0, 55)) + '…” <span style="color:var(--ink-2)">(' + compact(p.alcance) + ' alc)</span>').join('<br>')
+              : '<span style="color:var(--ink-2)">nada publicado na janela</span>') + '</td></tr>';
+        }).join('') + '</tbody></table></div></div>' : '';
+    })();
+
+    /* posts da semana */
+    const ordenados = ps.slice().sort((a, b) => b.alcance - a.alcance);
+    const temF = ordenados.some((p) => p.follows !== undefined);
+    $('semana-posts').innerHTML = ordenados.length ? '<table class="arq-table"><thead><tr><th>Post</th><th>Quando</th><th>Formato</th>' +
+      '<th class="num-col">Alcance</th><th class="num-col">Engaj.</th><th class="num-col">Comp.</th>' +
+      (temF ? '<th class="num-col">Novos seg.</th><th class="num-col">Conv./mil</th>' : '') + '</tr></thead><tbody>' +
+      ordenados.map((p) => '<tr><td style="font-weight:400;max-width:360px">' + (p.thumb ? '<img class="thumb-sm" src="' + p.thumb + '" alt="">' : '') +
+        (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + esc(p.legenda.slice(0, 62)) + '… ↗</a>' : esc(p.legenda.slice(0, 62)) + '…') + '</td>' +
+        '<td style="white-space:nowrap">' + p.ts.slice(8, 10) + '/' + p.ts.slice(5, 7) + ' (' + p.dia + ') ' + p.ts.slice(11) + '</td>' +
+        '<td style="white-space:nowrap"><span class="dot" style="background:' + FORMATOS[p.tipo].cor + '"></span>' + FORMATOS[p.tipo].label + '</td>' +
+        '<td class="num-col"><strong>' + fmt.format(p.alcance) + '</strong></td>' +
+        '<td class="num-col">' + pct(p.engaj) + (p.provisorio ? ' <span class="prov" title="< 72h — ainda amadurecendo">⏳</span>' : '') + '</td>' +
+        '<td class="num-col">' + fmt.format(p.shares) + '</td>' +
+        (temF ? '<td class="num-col">' + (p.follows !== undefined ? '<strong style="color:var(--accent)">+' + fmt.format(p.follows) + '</strong>' : '—') + '</td>' +
+          '<td class="num-col">' + (p.follows !== undefined && p.alcance ? (p.follows / p.alcance * 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) : '—') + '</td>' : '') +
+        '</tr>').join('') + '</tbody></table>' : '<p class="vazio">Nenhum post nos últimos 7 dias.</p>';
+  }
+
+  if (DATA.totalSeguidores) $('perfil-seg').textContent = compact(DATA.totalSeguidores) + ' seguidores';
+
+  /* exportar análises — briefing de produção em Markdown (baixa .md + copia pro clipboard) */
+  const limpaHtml = (t) => String(t || '').replace(/<strong>/g, '**').replace(/<\/strong>/g, '**').replace(/<[^>]+>/g, '').trim();
+  function montarExportacao() {
+    const L = ['# Análises de conteúdo — @felipevenancio.ia', '_Dados atualizados em ' + DATA.atualizadoEm + ' (fuso SP)_'];
+    const A = DATA.analises;
+    if (A && Array.isArray(A.pautas) && A.pautas.length) {
+      L.push('## 🎠 O que produzir agora' + (A.geradoEm ? ' _(IA · ' + A.geradoEm + ')_' : ''));
+      A.pautas.forEach((p, i) => {
+        L.push('### ' + (i + 1) + '. ' + limpaHtml(p.pauta));
+        if (p.porque) L.push('- **Por quê:** ' + limpaHtml(p.porque));
+        if (p.como) L.push('- **Como:** ' + limpaHtml(p.como));
+        if (p.quando || p.formato) L.push('- **Quando:** ' + limpaHtml([p.formato, p.quando].filter(Boolean).join(' · ')));
+      });
+    }
+    const ins = DATA.insightsHoje;
+    if (ins && ins.insights && ins.insights.length) {
+      L.push('## 💡 Leituras do dia _(IA · ' + (ins.geradoEm || '') + ')_');
+      ins.insights.forEach((x) => L.push('### ' + (x.emoji || '') + ' ' + limpaHtml(x.titulo) + '\n' + limpaHtml(x.texto)));
+      if (ins.acoes && ins.acoes.length) {
+        L.push('### ✅ Ações');
+        ins.acoes.forEach((a) => L.push('- ' + limpaHtml(a.acao) + (a.quando ? ' — _' + limpaHtml(a.quando) + '_' : '') + (a.link ? ' — ' + a.link : '')));
+      }
+    }
+    if (A && A.formatos) {
+      for (const [k, F2] of Object.entries(FORMATOS)) {
+        if (k === 'global' || !A.formatos[k] || !Array.isArray(A.formatos[k].leituras) || !A.formatos[k].leituras.length) continue;
+        L.push('## 📈 ' + F2.label + ' — ' + (A.formatos[k].periodo || 'período'));
+        A.formatos[k].leituras.forEach((x) => L.push('### ' + (x.emoji || '') + ' ' + limpaHtml(x.titulo) + '\n' + limpaHtml(x.texto)));
+      }
+      const g = A.global && (A.global.m6 || A.global.m3);
+      if (g && Array.isArray(g.leituras) && g.leituras.length) {
+        L.push('## 🌐 A conta inteira — ' + (g.periodo || ''));
+        g.leituras.forEach((x) => L.push('### ' + (x.emoji || '') + ' ' + limpaHtml(x.titulo) + '\n' + limpaHtml(x.texto)));
+      }
+    }
+    const blocoCards = (dados, titulo) => {
+      if (!dados || !Array.isArray(dados.cards) || !dados.cards.length) return;
+      L.push('## ' + titulo + (dados.geradoEm ? ' _(IA · ' + dados.geradoEm + ')_' : ''));
+      dados.cards.forEach((x) => L.push('### ' + (x.emoji || '') + ' ' + limpaHtml(x.titulo) + '\n' + limpaHtml(x.texto)));
+    };
+    blocoCards(DATA.comentarios, '💬 Vozes do público');
+    blocoCards(DATA.capas, '🖼️ Capas — o que o slide 1 diz');
+    return L.join('\n\n');
+  }
+  $('btn-exportar').addEventListener('click', () => {
+    const md = montarExportacao();
+    try { if (navigator.clipboard) navigator.clipboard.writeText(md); } catch (e) { /* sem clipboard */ }
+    try {
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'analises-felipevenancio.ia-' + DATA.atualizadoEm.slice(0, 10) + '.md';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    } catch (e) { /* download falhou, clipboard já tentou */ }
+    const b = $('btn-exportar'); const antes = b.textContent;
+    b.textContent = '✓ baixado + copiado';
+    setTimeout(() => { b.textContent = antes; }, 2200);
+  });
+
+  /* seções editoriais VIVAS (mineração de comentários e de capas — renovadas 1x/dia, na 1ª rodada) */
+  (function cartoesEstaticos() {
+    const render = (dados, sec, lede, cards, emojiPadrao) => {
+      if (!dados || !Array.isArray(dados.cards) || !dados.cards.length) return;
+      $(sec).style.display = '';
+      $(lede).textContent = (dados.lede || '') + (dados.geradoEm ? ' Análise do Claude gerada em ' + dados.geradoEm + ' · renova todo dia, na primeira rodada do atualizar.' : '');
+      $(cards).innerHTML = dados.cards.map((x) =>
+        '<div class="insight"><div class="num">' + (x.emoji || emojiPadrao) + '</div><h3>' + esc(x.titulo || '') + '</h3><p>' + (x.texto || '') + '</p>' + carimboIA(dados.geradoEm) + '</div>').join('');
+    };
+    render(DATA.comentarios, 'sec-vozes', 'vozes-lede', 'vozes-cards', '💬');
+    render(DATA.capas, 'sec-capas', 'capas-lede', 'capas-cards', '🖼️');
+  })();
+
+  renderAll();
+</script>
